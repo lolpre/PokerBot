@@ -1,0 +1,29 @@
+Steps:
+- Create a Discord server for our bot
+- 
+
+General Structure:
+- Have the bot hosted on Heroku or another hosting website
+- Have the Cards and Deck in their own separate classes. 
+- Have a User class
+- 2-9 players
+- 52 cards
+- Have the bot private message each player for their own hand while having a main UI in the main channel
+  - Have reactions to be used as commands
+- Moves have to be public
+- Use embeds for UI
+- Turn based game
+
+?: Users have their own money? Or are they gonna have a set amount of money?
+?: Currency?
+  - Everyone gets a set amount of money to begin with
+  - A reset button where players can reset their money if they go bankrupt -> keep track of how many times each person reset
+  - Have a leaderboard
+  - 
+
+Classes:
+- Cards
+- Deck
+- User
+- Poker/Wrapper
+- 
