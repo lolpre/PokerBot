@@ -28,7 +28,7 @@ def Announcer():
         print("Would you like to call, raise, or fold?")
 
     def showCards(seat, pkr_players):
-        play_hand = pkr_players[seat].hand
+        play_hand = pkr_players[seat].getHand()
         hand_str = ""
         print("Your current hand:")
         for card in play_hand:
