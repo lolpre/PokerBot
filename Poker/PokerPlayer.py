@@ -29,9 +29,9 @@ class PokerPlayer:
 
     '''Adds a card to the player's hand.
        A player cannot have more than 5 cards.'''
-    def addCard(self, Card):
+    def addCard(self, c):
         if len(self._hand) < 5:
-            self._hand.append(Card)
+            self._hand.append(c)
 
     '''Returns the player's balance'''
     def getGameBalance(self):
