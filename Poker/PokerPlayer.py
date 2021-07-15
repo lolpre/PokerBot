@@ -34,7 +34,7 @@ class PokerPlayer:
             self._hand.append(Card)
 
     '''Returns the player's balance'''
-    def getBalance(self):
+    def getGameBalance(self):
         return self._gameBalance
 
     '''Sets the Poker Player's current balance.
