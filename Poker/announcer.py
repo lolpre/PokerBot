@@ -1,4 +1,4 @@
-def Announcer():
+class Announcer():
     def initiateGame():
         print("WELCOME TO POKER BOT!")
         print("If this is your first time with Poker Bot," + 
