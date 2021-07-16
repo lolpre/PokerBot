@@ -4,10 +4,10 @@ class Leaderboard:
         self.players=[]
         self.playerdata={}
         
-    def printLeaderboard(self):
+    async def printLeaderboard(self, ctx):
         sort_byvalue=sorted(self.playerdata.items(),key=lambda x:x[1],reverse=True)
         for i in sort_byvalue:
-            print(i[0],i[1])
+            await ctx.send((i[0],i[1]))
 
     def addplayer(self,name):
         self.players.append(name)
