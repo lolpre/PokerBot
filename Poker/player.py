@@ -4,8 +4,8 @@ class Player:
 		self.balance = balance
 
 	def getBalance(self):
-		return self.id
+		return self.balance
 	
 	def setBalance(self, value):
-		self.id = value
+		self.balance = value
 
