@@ -86,3 +86,13 @@ class PokerWrapper:
             for i in range(2):
                 c = self.gamedeck.drawCard()
                 p.addCard(c)
+    def checkPlayerBalance(self):
+        for i in self.participants:
+            if i.getGameBalance()<=0:
+                print(i.username(), "has left the table")
+                self.participants.remove(i)
+    def removePlayer(self,id):
+        for i in self.participants:
+            if i.username()==id:
+                self.participants.remove(i)
+        self.numPlayers-=1
