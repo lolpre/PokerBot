@@ -10,7 +10,7 @@ class Deck:
 
 	def build(self):
 		for s in ["Spades", "Clubs", "Diamonds", "Heart"]:
-			for v in ['A', '2', '3', '4','5', '6', '7', '8', '9', '10', 'J', 'K']:
+			for v in ['A', '2', '3', '4','5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']:
 				self.cards.append(Card(s, v))
 
 	def show(self):
