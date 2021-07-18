@@ -98,6 +98,7 @@ class PokerWrapper:
         self.numPlayers-=1
     
     def createCommDeck(self):
+        i = 0
         for i in range(3):
             self.addCardtoComm()
         
