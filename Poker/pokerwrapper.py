@@ -96,3 +96,11 @@ class PokerWrapper:
             if i.username()==id:
                 self.participants.remove(i)
         self.numPlayers-=1
+    
+    def createCommDeck(self):
+        i = 0
+        for i in range(3):
+            self.addCardtoComm()
+        
+    def addCardtoComm(self):
+        self.communityDeck.append(self.gameDeck.drawCard())
