@@ -15,13 +15,13 @@ class PokerWrapper:
         self.currentPot=0
         self.pokerUI
         self.gamedeck = Deck()
-        self.communityDeck
+        self.communityDeck=[]
         self.participants = []
         self.startingBalance
     
     async def startGame(self, ctx):
         await Announcer.initiateGame(ctx)
-    
+
     async def setPlayers(self, ctx, bot):
         embed = discord.Embed(title="Poker: Texas hold 'em", 
         description="Starting Balance: "+str(self.startingBalance)+""" <:chips:865450470671646760>
@@ -37,27 +37,24 @@ class PokerWrapper:
 
         for reaction in message.reactions:
             if reaction.emoji == '✅':
-                i = 1
                 async for user in reaction.users():
                     if user != bot.user:
                         self.participants.append(PokerPlayer(user.id, i))
-                        i += 1
-        if i < 3:
+        if len(self.participants) < 3:
             await ctx.send("Not enough players")
             return False
         else:
-            await ctx.send("Starting game with " + str(i) + " players")
-            
+            await ctx.send("Starting game with " + str(len(self.participants)) + " players")
 
     async def setBlind(self, ctx):
-        
+
         def representsInt(s):
             try: 
                 int(s)
                 return True
             except ValueError:
                 return False
-        
+
         def verify(m):
             return m.author == ctx.message.author and representsInt(m.content)
 
@@ -68,11 +65,10 @@ class PokerWrapper:
         except asyncio.TimeoutError:
             await ctx.send(f"Sorry, you took too long to type the blind")
             return False
-        
+
         self.hardBlind = int(msg.content)
 
         #await Announcer.reportBet(ctx, blind)
-        
         
     def setBalance(self, balance):
         self.startingBalance = balance
@@ -86,17 +82,19 @@ class PokerWrapper:
             for i in range(2):
                 c = self.gamedeck.drawCard()
                 p.addCard(c)
+
     def checkPlayerBalance(self):
         for i in self.participants:
             if i.getGameBalance()<=0:
                 print(i.username(), "has left the table")
                 self.participants.remove(i)
+
     def removePlayer(self,id):
         for i in self.participants:
             if i.username()==id:
                 self.participants.remove(i)
         self.numPlayers-=1
-    
+
     def createCommDeck(self):
         i = 0
         for i in range(3):
@@ -104,3 +102,10 @@ class PokerWrapper:
         
     def addCardtoComm(self):
         self.communityDeck.append(self.gameDeck.drawCard())
+
+    def resetRound(self):
+        self.gameStarted=False
+        self.currentPot=0
+        self.communityDeck.clear()
+        self.gamedeck= Deck()
+        self.numPlayers=len(self.participants)
