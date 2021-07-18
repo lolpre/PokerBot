@@ -1,6 +1,7 @@
 from Poker.player import Player
 from Poker.pokerplayer import PokerPlayer
 from Poker.card import Card
+from Poker.deck import Deck
 from Poker.announcer import Announcer
 import asyncio
 import discord
@@ -13,7 +14,7 @@ class PokerWrapper:
         self.hardBlind=0
         self.currentPot=0
         self.pokerUI
-        self.gamedeck
+        self.gamedeck = Deck()
         self.communityDeck
         self.participants = []
         self.startingBalance
@@ -72,4 +73,15 @@ class PokerWrapper:
 
         #await Announcer.reportBet(ctx, blind)
         
+        
+    def setBalance(self, balance):
+        for p in self.participants:
+            p.setInitBalance(balance)
 
+    def dealCards(self):
+        self.gamedeck.shuffle()
+
+        for p in self.participants:
+            for i in range(2):
+                c = self.gamedeck.drawCard()
+                p.addCard(c)
