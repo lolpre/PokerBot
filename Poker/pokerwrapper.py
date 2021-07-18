@@ -75,6 +75,7 @@ class PokerWrapper:
         
         
     def setBalance(self, balance):
+        self.startingBalance = balance
         for p in self.participants:
             p.setInitBalance(balance)
 
