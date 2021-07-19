@@ -1,8 +1,9 @@
 from Poker.player import Player
 from Poker.pokerplayer import PokerPlayer
-from Poker.card import Card
 from Poker.deck import Deck
+from Poker.card import Card
 from Poker.announcer import Announcer
+from Poker.evalhand import EvaluateHand
 import asyncio
 import discord
 
@@ -17,6 +18,7 @@ class PokerWrapper:
         self.gamedeck = Deck()
         self.communityDeck=[]
         self.participants = []
+        self.competing=[]
         self.startingBalance
     
     async def startGame(self, ctx):
@@ -37,9 +39,11 @@ class PokerWrapper:
 
         for reaction in message.reactions:
             if reaction.emoji == '✅':
+                i=1
                 async for user in reaction.users():
                     if user != bot.user:
                         self.participants.append(PokerPlayer(user.id, i))
+                        i+=1
         if len(self.participants) < 3:
             await ctx.send("Not enough players")
             return False
@@ -102,6 +106,23 @@ class PokerWrapper:
         
     def addCardtoComm(self):
         self.communityDeck.append(self.gameDeck.drawCard())
+
+    def findWinner(self):
+        for x in self.competing:
+            commAndHand = self.communityDeck+ x._hand
+            Eval=EvaluateHand(commAndHand)
+            x._winCondition=Eval.evaluate()
+            print (x._winCondition)
+
+        winningCond = max(x._winCondition[0] for x in self.participants)
+        print(winningCond)
+        compete=[]
+        for x in self.participants:
+            if x._winCondition[0]==winningCond:
+                compete.append(x)
+        winners=Eval.winning(compete,winningCond)
+        for x in winners:
+            print(x._username+": "+ x.getWinCond())
 
     def resetRound(self):
         self.gameStarted=False
