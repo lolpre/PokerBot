@@ -1,12 +1,36 @@
+import asyncio
+import discord
+from Poker.deck import Deck
+from Poker.card import Card
+
+suits = {"Spades": "♤", "Clubs": "♧", "Diamonds": "♢", "Heart": "♡"}
+
+
 class PokerPlayer:
-    def __init__(self, username, seatNumber):
+    def __init__(self, username, seatNumber, user):
+        self._user = user
         self._username = username
         self._seatNumber = seatNumber
         self._hand = []
         self._gameBalance = 3000
         self._playerAction = 0
         self._inGame = True
-        self._winCondition=[0]
+        self._winCondition = [0]
+
+    '''DMs a players hand'''
+    async def send_hand(self, bot):
+        handString = ""
+        handEmbed = discord.Embed(
+            colour=0xFFFFFF)
+
+        for card in self._hand:
+            handString += "``` "+suits[card.suit] + card.val
+            handString += " ```\n"
+
+        handEmbed.add_field(name="Your Hand:",
+                            value=handString, inline=False)
+
+        await self._user.send(embed=handEmbed)
 
     '''Returns the player's username'''
     def username(self):
@@ -60,26 +84,26 @@ class PokerPlayer:
     '''Sets the player's action'''
     def setAction(self, action):
         self._playerAction = action
-    
+
     '''Returns player's win condition'''
     def getWinCond(self):
-        if self._winCondition[0]==10:
+        if self._winCondition[0] == 10:
             return "ROYAL FLUSH"
-        elif self._winCondition[0]==9:
+        elif self._winCondition[0] == 9:
             return "STRAIGHT FLUSH"
-        elif self._winCondition[0]==8:
+        elif self._winCondition[0] == 8:
             return "FOUR OF A KIND"
-        elif self._winCondition[0]==7:
+        elif self._winCondition[0] == 7:
             return "FULL HOUSE"
-        elif self._winCondition[0]==6:
+        elif self._winCondition[0] == 6:
             return "FLUSH"
-        elif self._winCondition[0]==5:
+        elif self._winCondition[0] == 5:
             return "STRAIGHT"
-        elif self._winCondition[0]==4:
+        elif self._winCondition[0] == 4:
             return "THREE OF A KIND"
-        elif self._winCondition[0]==3:
+        elif self._winCondition[0] == 3:
             return "TWO PAIR"
-        elif self._winCondition[0]==2:
+        elif self._winCondition[0] == 2:
             return "ONE PAIR"
-        elif self._winCondition[0]==1:
+        elif self._winCondition[0] == 1:
             return "HIGH CARD"
