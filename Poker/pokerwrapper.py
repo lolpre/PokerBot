@@ -7,29 +7,31 @@ from Poker.evalhand import EvaluateHand
 import asyncio
 import discord
 
+
 class PokerWrapper:
     def __init__(self):
-        self.gameID
-        self.gameStarted=False
-        self.numPlayers=0
-        self.hardBlind=0
-        self.currentPot=0
-        self.pokerUI
+        self.gameID=0
+        self.gameStarted = False
+        self.numPlayers = 0
+        self.hardBlind = 0
+        self.currentPot = 0
+        self.pokerUI=0
         self.gamedeck = Deck()
-        self.communityDeck=[]
+        self.communityDeck = []
         self.participants = []
-        self.competing=[]
-        self.startingBalance
-    
+        self.competing = []
+        self.startingBalance = 0
+
+
     async def startGame(self, ctx):
         await Announcer.initiateGame(ctx)
 
     async def setPlayers(self, ctx, bot):
-        embed = discord.Embed(title="Poker: Texas hold 'em", 
-        description="Starting Balance: "+str(self.startingBalance)+""" <:chips:865450470671646760>
-        Min Bet: """+str(self.hardBlind)+""" <:chips:865450470671646760> 
+        embed = discord.Embed(title="Poker: Texas hold 'em",
+                              description="Starting Balance: "+str(self.startingBalance)+""" <:chips:865450470671646760>
+        Min Bet: """+str(self.hardBlind)+""" <:chips:865450470671646760>
         \nReact to Join!""",
-        color=discord.Color.green())
+            color=discord.Color.green())
 
         message = await ctx.send(embed=embed)
         await message.add_reaction('✅')
@@ -39,12 +41,12 @@ class PokerWrapper:
 
         for reaction in message.reactions:
             if reaction.emoji == '✅':
-                i=1
+                i = 1
                 async for user in reaction.users():
                     if user != bot.user:
-                        self.participants.append(PokerPlayer(user.id, i))
-                        i+=1
-        if len(self.participants) < 3:
+                        self.participants.append(PokerPlayer(user.name, i, user))
+                        i += 1
+        if len(self.participants) < 2:
             await ctx.send("Not enough players")
             return False
         else:
@@ -53,7 +55,7 @@ class PokerWrapper:
     async def setBlind(self, ctx):
 
         def representsInt(s):
-            try: 
+            try:
                 int(s)
                 return True
             except ValueError:
@@ -65,68 +67,69 @@ class PokerWrapper:
         await Announcer.askBet(ctx)
 
         try:
-            msg = await self.client.wait_for('message', check = verify, timeout = 30)
+            msg = await self.client.wait_for('message', check=verify, timeout=30)
         except asyncio.TimeoutError:
             await ctx.send(f"Sorry, you took too long to type the blind")
             return False
 
         self.hardBlind = int(msg.content)
 
-        #await Announcer.reportBet(ctx, blind)
-        
+        # await Announcer.reportBet(ctx, blind)
+
     def setBalance(self, balance):
         self.startingBalance = balance
         for p in self.participants:
             p.setInitBalance(balance)
 
-    def dealCards(self):
+    async def dealCards(self, bot):
         self.gamedeck.shuffle()
 
         for p in self.participants:
             for i in range(2):
                 c = self.gamedeck.drawCard()
                 p.addCard(c)
-
+            await p.send_hand(bot)
+    
     def checkPlayerBalance(self):
         for i in self.participants:
-            if i.getGameBalance()<=0:
+            if i.getGameBalance() <= 0:
                 print(i.username(), "has left the table")
                 self.participants.remove(i)
 
-    def removePlayer(self,id):
+    def removePlayer(self, id):
         for i in self.participants:
-            if i.username()==id:
+            if i.username() == id:
                 self.participants.remove(i)
-        self.numPlayers-=1
+        self.numPlayers -= 1
 
     def createCommDeck(self):
         i = 0
         for i in range(3):
             self.addCardtoComm()
-        
+
     def addCardtoComm(self):
         self.communityDeck.append(self.gameDeck.drawCard())
 
     def findWinner(self):
         for x in self.competing:
-            commAndHand = self.communityDeck+ x._hand
-            Eval=EvaluateHand(commAndHand)
-            x._winCondition=Eval.evaluate()
+            commAndHand = self.communityDeck + x._hand
+            Eval = EvaluateHand(commAndHand)
+            x._winCondition = Eval.evaluate()
             print (x._winCondition)
 
         winningCond = max(x._winCondition[0] for x in self.participants)
         print(winningCond)
-        compete=[]
+        compete = []
         for x in self.participants:
-            if x._winCondition[0]==winningCond:
+            if x._winCondition[0] == winningCond:
                 compete.append(x)
-        winners=Eval.winning(compete,winningCond)
+        winners = Eval.winning(compete, winningCond)
         for x in winners:
-            print(x._username+": "+ x.getWinCond())
+            print(x._username+": " + x.getWinCond())
 
     def resetRound(self):
-        self.gameStarted=False
-        self.currentPot=0
+        self.gameStarted = False
+        self.currentPot = 0
         self.communityDeck.clear()
-        self.gamedeck= Deck()
-        self.numPlayers=len(self.participants)
+        self.gamedeck = Deck()
+        self.numPlayers = len(self.participants)
