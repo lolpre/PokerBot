@@ -41,7 +41,7 @@ class Server:
             for i in range(len(pool)):
                 self.announcer.askMove(pool[i].getHand(), hasRaised)
                 format_msg = message.content.lower().strip().split()
-                player.setAction(format_msg)
+                pool[i].setAction(format_msg)
                 if format_msg == "raise":
                     self.announcer.reportRaise(pool[i].username, format_msg[1]) 
                     hasRaised = True
