@@ -111,6 +111,7 @@ class PokerWrapper:
         self.communityDeck.append(self.gameDeck.drawCard())
 
     def findWinner(self):
+        Eval = EvaluateHand(self.communityDeck)
         for x in self.competing:
             commAndHand = self.communityDeck + x._hand
             Eval = EvaluateHand(commAndHand)
@@ -124,8 +125,9 @@ class PokerWrapper:
             if x._winCondition[0] == winningCond:
                 compete.append(x)
         winners = Eval.winning(compete, winningCond)
-        for x in winners:
-            print(x._username+": " + x.getWinCond())
+        # for x in winners:
+        #     print(x._username+": " + x.getWinCond())
+        return winners
 
     def resetRound(self):
         self.gameStarted = False
