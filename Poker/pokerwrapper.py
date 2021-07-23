@@ -15,8 +15,8 @@ class PokerWrapper:
         self.numPlayers = 0
         self.hardBlind = 0
         self.currentPot = 0
-        self.pokerUI=0
-        self.gamedeck = Deck()
+        self.pokerUI = Announcer()
+        self.gameDeck = Deck()
         self.communityDeck = []
         self.participants = []
         self.competing = []
@@ -24,7 +24,7 @@ class PokerWrapper:
 
 
     async def startGame(self, ctx):
-        await Announcer.initiateGame(ctx)
+        await self.pokerUI.initiateGame(ctx)
 
     async def setPlayers(self, ctx, bot):
         embed = discord.Embed(title="Poker: Texas hold 'em",
@@ -52,7 +52,7 @@ class PokerWrapper:
         else:
             await ctx.send("Starting game with " + str(len(self.participants)) + " players")
 
-    async def setBlind(self, ctx):
+    async def setBlind(self, ctx, bot):
 
         def representsInt(s):
             try:
@@ -64,10 +64,10 @@ class PokerWrapper:
         def verify(m):
             return m.author == ctx.message.author and representsInt(m.content)
 
-        await Announcer.askBet(ctx)
+        await self.pokerUI.askBet(ctx)
 
         try:
-            msg = await self.client.wait_for('message', check=verify, timeout=30)
+            msg = await bot.wait_for('message', check=verify, timeout=30)
         except asyncio.TimeoutError:
             await ctx.send(f"Sorry, you took too long to type the blind")
             return False
@@ -76,17 +76,17 @@ class PokerWrapper:
 
         # await Announcer.reportBet(ctx, blind)
 
-    def setBalance(self, balance):
+    def setBalance(self, ctx, balance):
         self.startingBalance = balance
         for p in self.participants:
             p.setInitBalance(balance)
 
     async def dealCards(self, bot):
-        self.gamedeck.shuffle()
+        self.gameDeck.shuffle()
 
         for p in self.participants:
             for i in range(2):
-                c = self.gamedeck.drawCard()
+                c = self.gameDeck.drawCard()
                 p.addCard(c)
             await p.send_hand(bot)
     
@@ -131,5 +131,11 @@ class PokerWrapper:
         self.gameStarted = False
         self.currentPot = 0
         self.communityDeck.clear()
-        self.gamedeck = Deck()
+        self.gameDeck = Deck()
         self.numPlayers = len(self.participants)
+
+    async def setDealer(self, ctx):
+        return
+    
+    async def takeBlinds(self, ctx):
+        return

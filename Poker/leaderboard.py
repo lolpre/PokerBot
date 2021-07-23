@@ -1,4 +1,4 @@
-from player import Player
+from Poker.player import Player
 class Leaderboard:
     
     def __init__(self):

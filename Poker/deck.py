@@ -1,5 +1,5 @@
 import random
-from card import Card
+from Poker.card import Card
 
 
 
