@@ -49,7 +49,7 @@ async def balance(ctx):
 
 @bot.command()
 async def p(ctx):
-    await server_bot.initiate_game(ctx, bot)
+    await server_bot.initiateGame(ctx, bot)
 
 if __name__ == '__main__':
     main()

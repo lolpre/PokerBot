@@ -5,7 +5,7 @@ class Card:
 		self.emote = None
 
 	def show(self):
-		return self.emote
+		return f"{self.val} of {self.suit}"
 
 	def getNumVal(self):
 		if self.val=="A":
