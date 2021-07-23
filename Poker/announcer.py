@@ -54,7 +54,7 @@ class Announcer:
     async def showCommCards(self, ctx, comm_deck):
         await ctx.send("CURRENT COMMUNITY DECK")
         for card in comm_deck:
-            card.show()
+            await ctx.send(card.show())
             
     async def reportRaise(self, ctx, seat, pkr_players):
         await ctx.send(pkr_players[seat-1].username() + " has raised!")

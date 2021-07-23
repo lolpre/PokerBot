@@ -6,6 +6,7 @@ class Server:
     def __init__(self):
         self.players = {}
         self.resets = 0
+        self.announcerUI = Announcer()
     
     def addPlayer(self, ctx):
         player = Player(ctx.author.name, 3000)
@@ -32,52 +33,52 @@ class Server:
 .join - Join an already existing Poker game\n\
 (Mods Only) .reset - Reset the balances of everyone in the server```")
 
-    def validate_game(ctx): #check if in game in channel is in progress
+    def validate_game(self, ctx): #check if in game in channel is in progress
         return
 
     async def initiateGame(self, ctx, bot):
         new_game = PokerWrapper()
-        self.startGame(ctx, new_game)
-        self.join(ctx, new_game, bot)
-        self.startRounds(ctx, new_game, bot)
-        self.findWinner(ctx)
-        self.resetRound(ctx, new_game, bot)
+        await self.startGame(ctx, new_game, bot)
+        await self.join(ctx, new_game, bot)
+        await self.startRounds(ctx, new_game, bot)
+        await self.findWinner(ctx)
+        await self.resetRound(ctx, new_game, bot)
     
     async def redoGame(self, ctx, game, bot):
-        self.startGame(ctx, game)
-        self.join(ctx, game, bot)
-        self.startRounds(ctx, game, bot)
-        self.findWinner(ctx)
-        self.resetRound(ctx, game, bot)
+        await self.startGame(ctx, game)
+        await self.join(ctx, game, bot)
+        await self.startRounds(ctx, game, bot)
+        await self.findWinner(ctx)
+        await self.resetRound(ctx, game, bot)
 
-    async def startGame(self, ctx, game):
+    async def startGame(self, ctx, game, bot):
         self.validate_game(ctx)
-        game.startGame(ctx)
-        game.setBlind(ctx)
-        game.setBalance(ctx) #change this function later
+        await game.startGame(ctx)
+        await game.setBlind(ctx, bot)
+        game.setBalance(ctx, 1000) #change this function later
 
     
     async def join(self, ctx, game, bot):
-        game.setPlayers(ctx)
+        await game.setPlayers(ctx, bot)
         """
         - 
         """
     
     async def startRounds(self, ctx, game, bot):
-        game.dealCards(bot) #needs to send dm's
-        game.setDealer() #needs to be implemented
-        game.takeBlinds() #needs to be implemented
-        self.flop(ctx, game)
-        self.nextTurns()
-        self.turn(ctx, game)
-        self.nextTurns()
-        self.river(ctx, game)
-        self.nextTurns()
+        await game.dealCards(bot) #needs to send dm's
+        game.setDealer(ctx) #needs to be implemented
+        game.takeBlinds(ctx) #needs to be implemented
+        await self.flop(ctx, game)
+        await self.nextTurns()
+        await self.turn(ctx, game)
+        await self.nextTurns()
+        await self.river(ctx, game)
+        await self.nextTurns()
     
     async def flop(self, ctx, game):
         game.createCommDeck()
         commDeck = game.communityDeck
-        Announcer.showCommCards(ctx, commDeck)
+        await self.announcerUI.showCommCards(ctx, commDeck)
 
     async def nextTurns(self, ctx):
         return
@@ -85,22 +86,24 @@ class Server:
     async def turn(self, ctx, game):
         game.addCardtoComm()
         commDeck = game.communityDeck
-        Announcer.showCommCards(ctx, commDeck)
+        await Announcer.showCommCards(ctx, commDeck)
     
     async def river(self, ctx, game):
         game.addCardtoComm()
         commDeck = game.communityDeck
-        Announcer.showCommCards(ctx, commDeck)
+        await Announcer.showCommCards(ctx, commDeck)
     
     async def findWinner(self, ctx, game):
         winners = game.findWinner() #needs to return a list of winners
         #announce the winner(s) of the game
 
     async def resetRound(self, ctx, game, bot):
-        Announcer.askLeave() #needs to be implemented
-        self.join(ctx, game, bot)
+        await Announcer.askLeave() #needs to be implemented
+        await self.join(ctx, game, bot)
         game.resetRound()
-        self.redoGame(ctx, game, bot)
+        await self.redoGame(ctx, game, bot)
+
+    
 
     
 
