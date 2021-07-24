@@ -14,7 +14,7 @@ bot.remove_command('help')
 
 def main():
     try:
-        bot.run('ODUwNDYyMjIyNTA4NDkwODAz.YLqEqg.HQJ4T5FOgN0Y9Ko9dw31bY4hj0w')
+        bot.run(TOKEN) #DISCORD BOT TOKEN HERE - Discord token cannot be shared publicly due to security reasons. 
     finally:
         print(f'End running at {time.asctime(time.localtime(time.time()))}')
         # print("hi")
