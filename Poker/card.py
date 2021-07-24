@@ -1,11 +1,11 @@
 class Card:
-	def __init__(self, suit, val):
+	def __init__(self, suit, val, emote):
 		self.suit = suit
 		self.val = val
-		self.emote = None
+		self.emote = emote
 
 	def show(self):
-		return f"{self.val} of {self.suit}"
+		return self.emote
 
 	def getNumVal(self):
 		if self.val=="A":
@@ -27,4 +27,3 @@ class Card:
 			return 2
 		if self.suit=="Spades":
 			return 3
-	

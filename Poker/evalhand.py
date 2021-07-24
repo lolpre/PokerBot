@@ -496,4 +496,3 @@ class EvaluateHand:
                                     winners2.append(x)
                             return winners2                      
         return winners
-

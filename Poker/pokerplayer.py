@@ -3,34 +3,30 @@ import discord
 from Poker.deck import Deck
 from Poker.card import Card
 
-suits = {"Spades": "♤", "Clubs": "♧", "Diamonds": "♢", "Heart": "♡"}
 
 
 class PokerPlayer:
-    def __init__(self, username, seatNumber, user):
+    def __init__(self, username, seatNumber, user, startBalance):
         self._user = user
         self._username = username
         self._seatNumber = seatNumber
         self._hand = []
-        self._gameBalance = 3000
+        self._gameBalance = startBalance
         self._playerAction = 0
         self._inGame = True
         self._winCondition = [0]
+        self._inPot=0
 
     '''DMs a players hand'''
     async def send_hand(self, bot):
         handString = ""
-        handEmbed = discord.Embed(
-            colour=0xFFFFFF)
-
+        await self._user.send("**Hand:**")
         for card in self._hand:
-            handString += "``` "+suits[card.suit] + card.val
-            handString += " ```\n"
+            handString += card.emote
 
-        handEmbed.add_field(name="Your Hand:",
-                            value=handString, inline=False)
+        
 
-        await self._user.send(embed=handEmbed)
+        await self._user.send(handString)
 
     '''Returns the player's username'''
     def username(self):
@@ -60,7 +56,7 @@ class PokerPlayer:
 
     '''Returns the player's balance'''
     def getGameBalance(self):
-        return self._gameBalance
+        return self._gameBalance-self._inPot
 
     '''Sets the Poker Player's current balance.
        opType represents the type of operation.

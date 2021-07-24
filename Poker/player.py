@@ -8,4 +8,3 @@ class Player:
 	
 	def setBalance(self, value):
 		self.balance = value
-
