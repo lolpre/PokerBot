@@ -1,1 +1,1 @@
-requests==0.11.1
+discord.py

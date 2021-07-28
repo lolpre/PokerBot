@@ -7,7 +7,7 @@ import os
 from Poker.server import Server
 from Poker.pokerwrapper import PokerWrapper
 
-
+TOKEN = os.getenv("TOKEN")
 
 intents = discord.Intents.default()
 intents.members = True
@@ -17,7 +17,7 @@ bot.remove_command('help')
 
 def main():
     try:
-        bot.run(os.environ['TOKEN'])
+        bot.run(TOKEN)
     finally:
         print(f'End running at {time.asctime(time.localtime(time.time()))}')
 
