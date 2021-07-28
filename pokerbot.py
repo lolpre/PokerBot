@@ -2,6 +2,7 @@ import asyncio
 import discord
 from discord.ext import commands
 import time
+import os
 
 from Poker.server import Server
 from Poker.pokerwrapper import PokerWrapper
@@ -16,7 +17,7 @@ bot.remove_command('help')
 
 def main():
     try:
-        bot.run('TOKEN')
+        bot.run(os.environ.get('TOKEN', 3))
     finally:
         print(f'End running at {time.asctime(time.localtime(time.time()))}')
 
