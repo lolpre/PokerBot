@@ -64,6 +64,10 @@ async def join(ctx):
 async def leave(ctx):
     await server_bot.leave(ctx, ctx.message.channel.id)      
 
-
+@bot.command() 
+async def reset(ctx):
+    if ctx.message.author.guild_permissions.administrator:
+        await server_bot.reset()
+    
 if __name__ == '__main__':
     main()
