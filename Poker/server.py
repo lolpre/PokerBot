@@ -118,6 +118,7 @@ class Server:
     async def leave(self, ctx, id):
         if id not in self.games:
             self.announcerUI.noGame(ctx)
+            return
 
         for x in self.games[id].leaveQueue:
             if x._user.id == ctx.author.id:
@@ -129,8 +130,9 @@ class Server:
                 if x._user.id==ctx.author.id:
                     self.games[id].leaveQueue.append(x)
                     await self.announcerUI.addedToLeaveQueue(ctx, x._user)
-                else:
-                    await self.announcerUI.notInGame(ctx, ctx.author)
+                    return
+                
+            await self.announcerUI.notInGame(ctx, ctx.author)
 
     
     async def join(self, ctx, id):
