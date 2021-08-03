@@ -89,7 +89,43 @@ class Announcer:
         await ctx.send(embed=embed)
 
     async def askLeave(self, ctx):
-        await ctx.send("Thanks for playing Poker with us! Hope you stop by again soon!")
+        await ctx.send("If you would like to leave the game, type the command .leave")
     
     async def resetGame(self, ctx):
-        await ctx.send("*\n\n**A NEW GAME HAS STARTED**")
+        await ctx.send("\n\n**A NEW GAME HAS STARTED**")
+
+    async def gameAlreadyInProgress(self, ctx):
+        await ctx.send("Cannot create game: Game is already in progress in this channel!")
+
+    async def noAccount(self, ctx, user):
+        await ctx.send(f"{user.mention} You do not have an account! Use the command .create to create an account!")
+    
+    async def playerAlreadyInGame(self, ctx, user):
+        await ctx.send(f"{user.mention} You are already in game! Use the .leave command to exit your current game to join a new one!")
+    
+    async def noGame(self, ctx):
+        await ctx.send(f"There is no game currently running in this channel")
+    
+    async def addedToJoinQueue(self, ctx, user):
+        await ctx.send(f"{user.mention} You have been added to the join queue! You will be in the next game once the round is over.")
+    
+    async def addedToLeaveQueue(self, ctx, user):
+        await ctx.send(f"{user.mention} You have been added to the leave queue! You will exit the game once the round is over.")
+    
+    async def playerHasJoined(self, ctx, user):
+        await ctx.send(f"{user.mention} has joined the game!")
+    
+    async def playerHasLeft(self, ctx, user):
+        await ctx.send(f"{user.mention} has left the game!")
+
+    async def playerKicked(self, ctx, user):
+        await ctx.send(f"{user.mention} You have been removed from the game as there are not enough players")
+    
+    async def notInGame(self, ctx, user):
+        await ctx.send(f"{user.mention} You are not in this game! Use the .join command to join the game")
+
+    async def alreadyInLeaveQueue(self, ctx, user):
+        await ctx.send(f"{user.mention} You are already in the leave queue! You will be removed from the game after this round")
+    
+    async def alreadyInJoinQueue(self, ctx, user):
+        await ctx.send(f"{user.mention} You are already in the join queue! You will be added to the game after this round")
