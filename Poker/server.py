@@ -72,15 +72,30 @@ class Server:
     # def validate_game(ctx): #check if in game in channel is in progress
     #     return
 
-    def validate_game(self, ctx): #check if in game in channel is in progress
-        return
+    async def validate_game(self, ctx): #check if in game in channel is in progress
+        if ctx.message.channel.id in self.games:
+            await self.announcerUI.gameAlreadyInProgress(ctx)
+            return False
+        return True
+
+    async def validate_player(self, ctx):
+        if ctx.author.id not in self.players:
+            await self.announcerUI.noAccount(ctx, ctx.author)
+            return False
+        if self.players[ctx.author.id].inGame:
+            await self.announcerUI.playerAlreadyInGame(ctx, ctx.author)
+            return False
+        return True
 
     async def initiateGame(self, ctx, id, bot):
         new_game = PokerWrapper(bot)
+        if await self.startGame(ctx, new_game, bot) == False:
+            return
         self.games[id] = new_game
-        await self.startGame(ctx, new_game, bot)
-        boolVal = await new_game.setPlayers(ctx, bot)
-        if boolVal==False: return
+        boolVal = await new_game.setPlayers(ctx, bot, self.players)
+        if boolVal==False:
+            del self.games[id] 
+            return
         await self.startRounds(ctx, new_game, bot)
         await self.findWinner(ctx, new_game)
         await self.resetRound(ctx, new_game, bot)
@@ -92,21 +107,48 @@ class Server:
         await self.resetRound(ctx, game, bot)
 
     async def startGame(self, ctx, game, bot):
-        self.validate_game(ctx)
+        if await self.validate_player(ctx) == False:
+            return False
+        if await self.validate_game(ctx) == False:
+            return False
         await game.startGame(ctx)
         await game.setBalance(ctx) #change this function later
         await game.setBlind(ctx, bot)
         
     async def leave(self, ctx, id):
+        if id not in self.games:
+            self.announcerUI.noGame(ctx)
+            return
+
+        for x in self.games[id].leaveQueue:
+            if x._user.id == ctx.author.id:
+                await self.announcerUI.alreadyInLeaveQueue(ctx, ctx.author)
+                return
+
         if id in self.games:
             for x in self.games[id].participants:
                 if x._user.id==ctx.author.id:
                     self.games[id].leaveQueue.append(x)
+                    await self.announcerUI.addedToLeaveQueue(ctx, x._user)
+                    return
+                
+            await self.announcerUI.notInGame(ctx, ctx.author)
 
     
     async def join(self, ctx, id):
+        if await self.validate_player(ctx) == False:
+            return
+        
+        for x in self.games[id].joinQueue:
+            if x._user.id == ctx.author.id:
+                await self.announcerUI.alreadyInJoinQueue(ctx, ctx.author)
+                return
+
         if id in self.games:
-            self.games[id].joinQueue.append(PokerPlayer(ctx.message.author.name, 0, ctx.message.author, self.games.startBalance))
+            self.games[id].joinQueue.append(PokerPlayer(ctx.message.author.name, 0, ctx.message.author, self.games[id].startingBalance))
+            await self.announcerUI.addedToJoinQueue(ctx, ctx.author)
+        else:
+            await self.announcerUI.noGame(ctx)
     
     async def startRounds(self, ctx, game, bot):
         for i in game.participants:
@@ -234,8 +276,6 @@ class Server:
                         i+=1
 
                 
-
-
             
     
     async def turn(self, ctx, game):
@@ -276,14 +316,16 @@ class Server:
         # await self.join(ctx, game, bot)
         game.resetRound()
         await self.announcerUI.showBalances(ctx, game.participants)
+        await self.announcerUI.askLeave(ctx)
         await asyncio.sleep(10)
-        game.addPlayers()
-        game.leaveGame(self.players)
+        await game.addPlayers(ctx, self.players)
+        await game.leaveGame(ctx, self.players, True)
         if len(game.participants)<2:
             for x in game.participants:
                 game.leaveQueue.append(x)
-            game.leaveGame(self.players)
-            await ctx.send("Not enough players!")
+            await ctx.send("Not enough players! Terminating game")
+            await game.leaveGame(ctx, self.players, False)
+            del self.games[ctx.message.channel.id]
             return
         await self.announcerUI.resetGame(ctx)
         await self.redoGame(ctx, game, bot)
