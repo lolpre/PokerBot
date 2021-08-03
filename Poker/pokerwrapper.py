@@ -31,7 +31,7 @@ class PokerWrapper:
     async def startGame(self, ctx):
         await self.pokerUI.initiateGame(ctx)
 
-    async def setPlayers(self, ctx, bot):
+    async def setPlayers(self, ctx, bot, players):
         embed = discord.Embed(title="Poker: Texas hold 'em",
                               description="Starting Balance: "+str(self.startingBalance)+""" <:chips:865450470671646760>
         Min Bet: """+str(self.hardBlind)+""" <:chips:865450470671646760>
@@ -48,25 +48,44 @@ class PokerWrapper:
             if reaction.emoji == '✅':
                 i = 1
                 async for user in reaction.users():
+                    if user != bot.user and user.id not in players:
+                        await self.pokerUI.noAccount(ctx, user)
+                        continue
+
+                    if user != bot.user and players[user.id].inGame:
+                        await self.pokerUI.playerAlreadyInGame(ctx, user)
+                        continue
+
                     if user != bot.user:
                         newPlayer= PokerPlayer(user.name, i, user, self.startingBalance)
                         self.participants.append(newPlayer)
+                        players[user.id].inGame = True
                         i += 1
         if len(self.participants) < 2:
             await ctx.send("Not enough players")
+            for p in self.participants:
+                players[p._user.id].inGame = False
+            self.participants = []
             return False
         else:
             await ctx.send("Starting game with " + str(len(self.participants)) + " players")
 
-    def addPlayers(self):
+    async def addPlayers(self, ctx, players):
         for newPlayer in self.joinQueue:
             self.participants.append(newPlayer)
+            players[newPlayer._user.id].inGame = True
+            await self.pokerUI.playerHasJoined(ctx, newPlayer._user)
         self.joinQueue.clear()
 
-    def leaveGame(self, players):
+    async def leaveGame(self, ctx, players, enoughPlayers):
         for x in self.leaveQueue:
             players[x._user.id].balance+= x.getGameBalance()-self.startingBalance
+            players[x._user.id].inGame = False
             self.participants.remove(x)
+            if enoughPlayers:
+                await self.pokerUI.playerHasLeft(ctx, x._user)
+            elif not enoughPlayers:
+                await self.pokerUI.playerKicked(ctx, x._user)
             
         self.leaveQueue.clear()
 
@@ -130,7 +149,7 @@ class PokerWrapper:
     def checkPlayerBalance(self):
         for i in self.participants:
             if i.getGameBalance() <= 0:
-                print(i.username(), "has left the table")
+                # print(i.username(), "has left the table")
                 self.participants.remove(i)
 
     def playerFold(self, id):
@@ -156,11 +175,11 @@ class PokerWrapper:
             commAndHand = self.communityDeck + x._hand
             Eval = EvaluateHand(commAndHand)
             x._winCondition = Eval.evaluate()
-            print (x._username)
+            # print (x._username)
 
-        winningCond = max(x._winCondition[0] for x in self.participants)
+        winningCond = max(x._winCondition[0] for x in self.competing)
         compete = []
-        for x in self.participants:
+        for x in self.competing:
             if x._winCondition[0] == winningCond:
                 compete.append(x)
         winners = Eval.winning(compete, winningCond)
