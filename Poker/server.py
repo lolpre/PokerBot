@@ -118,12 +118,14 @@ class Server:
     async def leave(self, ctx, id):
         if id not in self.games:
             self.announcerUI.noGame(ctx)
-        elif id in self.games:
-            for x in self.games[id].participants:
-                if x in self.games[id].leaveQueue:
-                    await self.announcerUI.alreadyInLeaveQueue(ctx, ctx.author)
-                    break
 
+        for x in self.games[id].leaveQueue:
+            if x._user.id == ctx.author.id:
+                await self.announcerUI.alreadyInLeaveQueue(ctx, ctx.author)
+                return
+
+        if id in self.games:
+            for x in self.games[id].participants:
                 if x._user.id==ctx.author.id:
                     self.games[id].leaveQueue.append(x)
                     await self.announcerUI.addedToLeaveQueue(ctx, x._user)
@@ -135,8 +137,8 @@ class Server:
         if await self.validate_player(ctx) == False:
             return
         
-        for x in self.games[id].participants:
-            if x in self.games[id].joinQueue:
+        for x in self.games[id].joinQueue:
+            if x._user.id == ctx.author.id:
                 await self.announcerUI.alreadyInJoinQueue(ctx, ctx.author)
                 return
 
