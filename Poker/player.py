@@ -1,3 +1,4 @@
+#reperesents user and sotres all data
 class Player:
 	def __init__(self, id, balance):
 		self.id = id        #unique ID to identify the user
