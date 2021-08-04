@@ -16,15 +16,15 @@ class PokerPlayer:
     # This is the constructor for the PokerPlayer class
     # It initializes the variables stored in a PokerPlayer object 
     def __init__(self, username, seatNumber, user, startBalance):
-        self._user = user
-        self._username = username
-        self._seatNumber = seatNumber
-        self._hand = []
-        self._gameBalance = startBalance
-        self._playerAction = 0
-        self._inGame = True
-        self._winCondition = [0]
-        self._inPot=0
+        self._user = user # Stores the PokerPlayer's Discord.User object
+        self._username = username # Represents the PokerPlayer's username
+        self._seatNumber = seatNumber # Represents the PokerPlayer's seat number in the current game
+        self._hand = [] # Stores the PokerPlayer's hands
+        self._gameBalance = startBalance # Stores the PokerPlayer's amount of money in the game
+        self._playerAction = 0 # Stores the move that the PokerPlayer wants to make
+        self._inGame = True # Shows if the PokerPlayer is still in the game
+        self._winCondition = [0] # Stores the winning condition of the PokerPlayer
+        self._inPot=0 # Stores the amount of money that the PokerPlayer has in the pot
 
     # This method sends card emotes as a direct message to the PokerPlayer
     async def send_hand(self, bot):
