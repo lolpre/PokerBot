@@ -6,7 +6,21 @@ import discord
 from Poker.player import Player
 import asyncio
 
+########################################################
+# SERVER                                               #
+# The Server class manages all the Poker Game classes  #
+# and executes the game. All the methods of other      #
+# classes will be called in this server.               #
+########################################################
 class Server:
+    
+    # the constructor of Server
+    # input: bot -> a class object. part of the Discord API, the bot information 
+    # initialized values: games -> a set of PokerWrapper objects. a set of all the ongoing games 
+    #                     bot -> initializes the bot 
+    #                     players -> a set of Player objects. a set of all registered players in a server
+    #                     resets -> an integer. the number of times the administrator reset the leaderboard
+    #                     announcerUI -> an Announcer object for the output
     def __init__(self, bot):
         self.games= {}
         self.bot=bot
@@ -14,6 +28,8 @@ class Server:
         self.resets = 0
         self.announcerUI = Announcer()
     
+    # adds the player to the player set 
+    # input: ctx -> a class object. part of Discord API, the context of the message
     async def addPlayer(self, ctx):
         if ctx.author.id not in self.players:
             player = Player(ctx.author.id, 3000)
@@ -24,6 +40,8 @@ class Server:
             await ctx.send("You already created an account!")
             return False
     
+    # gets the balance of a player 
+    # input: ctx -> a class object. part of Discord API, the context of the message
     async def getBalance(self, ctx):
         if ctx.author.id not in self.players:
             await ctx.send("You do not have an account! Use the .create command to create an account!")
@@ -36,14 +54,16 @@ class Server:
             embed.set_thumbnail(url=ctx.author.avatar_url)
             await ctx.send(embed=embed)
 
-    
+    # resets the leaderboard and the balacnes of all players 
     def reset(self):
         for player in self.players:
             player.setBalance(3000)
         self.resets += 1
     
+    # the help command calls this method. the tutorial and list of all 
+    # the commands to help a new user get started with the bot 
+    # input: ctx -> a class object. part of Discord API, the context of the message
     async def help(self, ctx):
-
         embed = discord.Embed(title="List of Commands", 
         description="""**.create** - Create your profile for the server 
         **.p** - Create and play a game of Texas Hold'Em Poker
@@ -54,7 +74,9 @@ class Server:
         color=0xffffff)
         embed.set_thumbnail(url="https://s.wsj.net/public/resources/images/JR-AA451_IFPOKE_GR_20191031164807.jpg")
         await ctx.send(embed=embed)
-        
+    
+    # outputs the formatted leaderboard. sorts leaderboard by player balance. 
+    # input: ctx -> a class object. part of Discord API, the context of the message
     async def printLeaderboard(self, ctx):
         sort_byvalue=sorted(self.players.items(),key=lambda x:x[1].balance,reverse=True)
         leaderboard=""
@@ -78,6 +100,8 @@ class Server:
             return False
         return True
 
+    # checks if the player has an account created. if not, output error message 
+    # input: ctx -> a class object. part of Discord API, the context of the message
     async def validate_player(self, ctx):
         if ctx.author.id not in self.players:
             await self.announcerUI.noAccount(ctx, ctx.author)
@@ -86,7 +110,12 @@ class Server:
             await self.announcerUI.playerAlreadyInGame(ctx, ctx.author)
             return False
         return True
-
+    
+    # initializes the game
+    # input: ctx -> a class object. part of Discord API, the context of the message
+    #        id -> an integer. each game is assigned their own id. this can help with 
+    #              searching for a game in the game set. 
+    #        bot -> a class object. part of the Discord API the bot information. 
     async def initiateGame(self, ctx, id, bot):
         new_game = PokerWrapper(bot)
         if await self.startGame(ctx, new_game, bot) == False:
@@ -100,12 +129,20 @@ class Server:
         await self.findWinner(ctx, new_game)
         await self.resetRound(ctx, new_game, bot)
     
+    # re-initializes the game
+    # input: ctx -> a class object. part of Discord API, the context of the message
+    #        game -> a PokerWrapper class object. holds game information 
+    #        bot -> a class object. part of the Discord API, the bot information 
     async def redoGame(self, ctx, game, bot):
         # await self.startGame(ctx, game, bot)
         await self.startRounds(ctx, game, bot)
         await self.findWinner(ctx, game)
         await self.resetRound(ctx, game, bot)
 
+    # begins the gameplay 
+    # input: ctx -> a class object. part of Discord API, the context of the message
+    #        game -> a PokerWrapper class object. holds game information 
+    #        bot -> a class object. part of the Discord API, the bot information 
     async def startGame(self, ctx, game, bot):
         if await self.validate_player(ctx) == False:
             return False
@@ -115,6 +152,9 @@ class Server:
         await game.setBalance(ctx) #change this function later
         await game.setBlind(ctx, bot)
         
+    # implements the leave command, called when a player wants to leave the game 
+    # input: ctx -> a class object. part of Discord API, the context of the message
+    #        id -> the game id. an integer
     async def leave(self, ctx, id):
         if id not in self.games:
             self.announcerUI.noGame(ctx)
@@ -134,7 +174,9 @@ class Server:
                 
             await self.announcerUI.notInGame(ctx, ctx.author)
 
-    
+    # implements the join command, called when the player wants to join the game 
+    # input: ctx -> a class object. part of Discord API, the context of the message
+    #        id -> the game id. an integer 
     async def join(self, ctx, id):
         if await self.validate_player(ctx) == False:
             return
@@ -150,6 +192,10 @@ class Server:
         else:
             await self.announcerUI.noGame(ctx)
     
+    # begins the round of a game. 
+    # input: ctx -> a class object. part of Discord API, the context of the message
+    #        game -> a PokerWrapper object. holds the game information 
+    #        bot -> a class object. part of the Discord API, the bot information 
     async def startRounds(self, ctx, game, bot):
         for i in game.participants:
             game.competing.append(i)
@@ -168,7 +214,9 @@ class Server:
             await self.nextTurns(ctx, game, bot)
             await game.pokerUI.showCommCards(ctx, game.communityDeck)
 
-    
+    # creates the community deck and reveals the first three cards. 
+    # input: ctx -> a class object. part of Discord API, the context of the message
+    #        game -> a PokerWrapper object, holds the game information 
     async def flop(self, ctx, game):
         game.createCommDeck()
         commDeck = game.communityDeck
@@ -179,6 +227,10 @@ class Server:
             x._winCondition = Eval.evaluate()
             await x._user.send(x.getWinCond())
 
+    # sets the blinds for two players. one player will get the big blind, 
+    # and the other gets the small blind. 
+    # input: ctx -> a class object. part of Discord API, the context of the message
+    #        game -> a PokerWrapper object, holds the game information 
     async def takeBlinds(self, ctx, game):
         await self.announcerUI.showPlayer(ctx,game)
         game.competing[0]._inPot=game.smallBlind
@@ -193,7 +245,12 @@ class Server:
         game.competing[0].setAction("blind")
         game.currentPot+=game.competing[0]._inPot
 
-
+    
+    # begins asking players for what their plan of action is. players can either 
+    # check, raise, or fold. a call value is only available when someone has raised 
+    # input: ctx -> a class object. part of Discord API, the context of the message
+    #        game -> a PokerWrapper object, holds the game information 
+    #        bot -> a class object. part of the Discord API, the context of the message 
     async def nextTurns(self, ctx, game, bot):
             # pool=[]
             # for i in game.competing:
@@ -277,7 +334,9 @@ class Server:
 
                 
             
-    
+    # reveals the fourth card in the community deck 
+    # input: ctx -> a class object. part of Discord API, the context of the message
+    #        game -> a PokerWrapper object, holds the game information 
     async def turn(self, ctx, game):
         game.addCardtoComm()
         commDeck = game.communityDeck
@@ -288,6 +347,9 @@ class Server:
             x._winCondition = Eval.evaluate()
             await x._user.send(x.getWinCond())
     
+    # reveals the fifth card in the community deck 
+    # input: ctx -> a class object. part of Discord API, the context of the message
+    #        game -> a PokerWrapper object, holds the game information 
     async def river(self, ctx, game):
         game.addCardtoComm()
         commDeck = game.communityDeck
@@ -298,6 +360,9 @@ class Server:
             x._winCondition = Eval.evaluate()
             await x._user.send(x.getWinCond())
     
+    # finds the winner out of all the players hand 
+    # input: ctx -> a class object. part of Discord API, the context of the message
+    #        game -> a PokerWrapper object, holds the game information 
     async def findWinner(self, ctx, game):
         for x in game.competing:
             await ctx.send("**"+x.username()+"'s Hand:**")
@@ -311,6 +376,10 @@ class Server:
             
         #announce the winner(s) of the game
 
+    # resets the round after the initial round has finished. 
+    # input: ctx -> a class object. part of Discord API, the context of the message
+    #        game -> a PokerWrapper object, holds the game information 
+    #        bot -> a class object. part of Discord API, the bot information 
     async def resetRound(self, ctx, game, bot):
         # await game.pokerUI.askLeave(ctx) #needs to be implemented
         # await self.join(ctx, game, bot)
