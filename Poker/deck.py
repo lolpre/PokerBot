@@ -11,8 +11,8 @@ class Deck:
 	# This is the constructor for the deck class
 	# It initializes the list of cards by calling the build method
 	def __init__(self):
-		self.cards = []
-		self.build()
+		self.cards = [] # Stores the cards present in the deck
+		self.build() # Creates the deck of cards
 	
 	# This method builds the deck by adding Card objects to the cards list
 	def build(self):
