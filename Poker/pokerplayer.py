@@ -3,9 +3,18 @@ import discord
 from Poker.deck import Deck
 from Poker.card import Card
 
+'''
 
+This is the class for each Poker Player object.
+A Poker Player object will be created for each user before
+they can join/play a poker game. The poker game interacts with 
+only the Poker Player objects and not the Player objects.
 
+'''
 class PokerPlayer:
+    
+    # This is the constructor for the PokerPlayer class
+    # It initializes the variables stored in a PokerPlayer object 
     def __init__(self, username, seatNumber, user, startBalance):
         self._user = user
         self._username = username
@@ -17,52 +26,50 @@ class PokerPlayer:
         self._winCondition = [0]
         self._inPot=0
 
-    '''DMs a players hand'''
+    # This method sends card emotes as a direct message to the PokerPlayer
     async def send_hand(self, bot):
         handString = ""
         await self._user.send("**Hand:**")
         for card in self._hand:
             handString += card.emote
-
-        
-
         await self._user.send(handString)
 
-    '''Returns the player's username'''
+    # This method returns the PokerPlayer’s username
     def username(self):
         return self._username
-
-    '''Returns the player's seatNumber'''
+    
+    # This method returns the PokerPlayer's seat number within the
+    # current game
     def seatNumber(self):
         return self._seatNumber
 
-    '''Returns the player's status'''
+    # This method returns the PokerPlayer’s status in the game. 
     def getStatus(self):
         return self._inGame
 
-    '''Sets the player's status'''
+    # This method sets the _inGame variable to True if the player is in 
+    # the current game round, and False otherwise
     def setStatus(self, status):
         self._inGame = status
 
-    '''Returns the player's action'''
+    # This method returns the PokerPlayer’s hand
     def getHand(self):
         return self._hand
 
-    '''Adds a card to the player's hand.
-       A player cannot have more than 2 cards.'''
+    # This method adds a maximum of 2 cards to the 
+    # PokerPlayer's hand
     def addCard(self, c):
         if len(self._hand) < 2:
             self._hand.append(c)
 
-    '''Returns the player's balance'''
+    # This method returns the PokerPlayer's gameBalance
     def getGameBalance(self):
         return self._gameBalance-self._inPot
-
-    '''Sets the Poker Player's current balance.
-       opType represents the type of operation.
-       1 is for addition and 0 is for subtraction.
-       The player's inGame status is set to False if 
-       their balance hits 0'''
+    
+    
+    # This method sets the PokerPlayer’s balance
+    # Where opType represents the type of operation: 
+    # 1 for addition and 0 for subtraction
     def setBalance(self, opType, amount):
         if opType:
             self._gameBalance += amount
@@ -73,15 +80,15 @@ class PokerPlayer:
                 if self._gameBalance == 0:
                     self.setStatus(False)
 
-    '''Returns the player's action'''
+    # This method returns the PokerPlayer's intended action
     def getAction(self):
         return self._playerAction
 
-    '''Sets the player's action'''
+    # This method sets the PokerPlayer's intended action
     def setAction(self, action):
         self._playerAction = action
 
-    '''Returns player's win condition'''
+    # This method returns the PokerPlayer's win condition
     def getWinCond(self):
         if self._winCondition[0] == 10:
             return "ROYAL FLUSH"
