@@ -301,11 +301,11 @@ class Server:
 
                     game.competing[0].setAction(format_msg)
                     if format_msg[0] == "raise":
-                        if(raiseRound > game.competing[0]._gameBalance):
-                            continue
                         await self.announcerUI.reportRaise(ctx, game.competing[0].username(), format_msg[1]) 
                         hasRaised = True
                         raiseRound=int(format_msg[1])
+                        if(raiseRound > game.competing[0]._gameBalance):
+                            continue
                         game.competing[0]._inPot+=raiseRound
                         game.currentPot+=raiseRound
                         raiseAmt=game.competing[0]._inPot
