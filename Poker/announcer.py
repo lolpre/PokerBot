@@ -225,9 +225,12 @@ class Announcer:
     #        user -> a class object. part of the Discord API, the user information 
     async def alreadyInJoinQueue(self, ctx, user):
         await ctx.send(f"{user.mention} You are already in the join queue! You will be added to the game after this round")
-    
-    # outputs the error message that the current game is currently full and that the player will be added to the join queue
-    # input: ctx -> a class object. part of Discord API, the context of the message
-    #        user -> a class object. part of the Discord API, the user information
+
     async def gameIsFull(self, ctx, user):
-        await ctx.send(f"{user.mentin} Game is currently full. You will be added to the join queue.")
+        await ctx.send(f"{user.mention} Game is currently full. You will be added to the join queue.")
+    
+    #outputs the error message that a particpant has wagered an amount higher than their game balance 
+    # input: ctx -> a class object. part of Discord API, the context of the message
+    #        user -> a class object. part of the Discord API, the user information 
+    async def aboveBalance(self, ctx, user):
+        await ctx.send(f"{user.mention} You exceeded your game balance. Please wager a new amount.")
