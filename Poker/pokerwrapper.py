@@ -57,7 +57,12 @@ class PokerWrapper:
                         await self.pokerUI.playerAlreadyInGame(ctx, user)
                         continue
 
-                    if user != bot.user:
+                    if user != bot.user and len(self.participants) == 8:
+                        await self.pokerUI.gameIsFull(ctx, user)
+                        newPlayer= PokerPlayer(user.name, i, user, self.startingBalance)
+                        self.joinQueue.append(newPlayer)
+
+                    elif user != bot.user:
                         newPlayer= PokerPlayer(user.name, i, user, self.startingBalance)
                         self.participants.append(newPlayer)
                         players[user.id].inGame = True
@@ -71,13 +76,18 @@ class PokerWrapper:
             return False
         else:
             await ctx.send("Starting game with " + str(len(self.participants)) + " players")
+    
     #adds to players to the game from the list of players waiting to be added
     async def addPlayers(self, ctx, players):
         for newPlayer in self.joinQueue:
+            if len(self.participants) == 8:
+                continue
             self.participants.append(newPlayer)
             players[newPlayer._user.id].inGame = True
             await self.pokerUI.playerHasJoined(ctx, newPlayer._user)
-        self.joinQueue.clear()
+            self.joinQueue.remove(newPlayer)
+        # self.joinQueue.clear()
+    
     #removes players based on the list of players ready to leave and checks if game is still able to play
     async def leaveGame(self, ctx, players, enoughPlayers):
         for x in self.leaveQueue:
@@ -90,6 +100,7 @@ class PokerWrapper:
                 await self.pokerUI.playerKicked(ctx, x._user)
             
         self.leaveQueue.clear()
+    
     #sets the blind at the start of the game and takes in input from users
     async def setBlind(self, ctx, bot):
 
@@ -115,6 +126,7 @@ class PokerWrapper:
         self.smallBlind = math.floor(self.hardBlind/2)
 
         # await Announcer.reportBet(ctx, blind)
+    
     #this updats the players balance after the end of each round
     async def setBalance(self, ctx):
 
@@ -147,29 +159,35 @@ class PokerWrapper:
                 c = self.gameDeck.drawCard()
                 p.addCard(c)
             await p.send_hand(bot)
+    
     #check if the current players in the game have balance to continue playing
     def checkPlayerBalance(self):
         for i in self.participants:
             if i.getGameBalance() <= 0:
                 # print(i.username(), "has left the table")
                 self.participants.remove(i)
+    
     #removes player from current rouhd with fold command
     def playerFold(self, id):
         self.competing.pop(0)
+    
     #remove player from the current game
     def removePlayer(self, id):
         for i in self.participants:
             if i.username() == id:
                 self.participants.remove(i)
         self.numPlayers -= 1
+    
     #makes community hand
     def createCommDeck(self):
         i = 0
         for i in range(3):
             self.addCardtoComm()
+    
     #adds card to community card
     def addCardtoComm(self):
         self.communityDeck.append(self.gameDeck.drawCard())
+    
     #at the end of each round find the winner
     def findWinner(self):
         Eval = EvaluateHand(self.communityDeck)
@@ -186,6 +204,7 @@ class PokerWrapper:
                 compete.append(x)
         winners = Eval.winning(compete, winningCond)
         return winners
+    
     #reset the round
     def resetRound(self):
         self.gameStarted = False
