@@ -301,6 +301,10 @@ class Server:
 
                     game.competing[0].setAction(format_msg)
                     if format_msg[0] == "raise":  
+                        if not format_msg[1].isdigit():
+                            await self.announcerUI.valueNotDigit(ctx, game.competing[0]._user)
+                            continue
+                            
                         raiseRound=int(format_msg[1])
                         if(raiseRound > game.competing[0]._gameBalance):
                             await self.announcerUI.aboveBalance(ctx, game.competing[0]._user)
