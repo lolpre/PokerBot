@@ -392,8 +392,8 @@ class Server:
         await self.announcerUI.showBalances(ctx, game.participants)
         await self.announcerUI.askLeave(ctx)
         await asyncio.sleep(10)
-        await game.addPlayers(ctx, self.players)
         await game.leaveGame(ctx, self.players, True)
+        await game.addPlayers(ctx, self.players)
         if len(game.participants)<2:
             for x in game.participants:
                 game.leaveQueue.append(x)

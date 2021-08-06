@@ -225,3 +225,6 @@ class Announcer:
     #        user -> a class object. part of the Discord API, the user information 
     async def alreadyInJoinQueue(self, ctx, user):
         await ctx.send(f"{user.mention} You are already in the join queue! You will be added to the game after this round")
+
+    async def gameIsFull(self, ctx, user):
+        await ctx.send(f"{user.mentin} Game is currently full. You will be added to the join queue.")
