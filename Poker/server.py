@@ -290,7 +290,10 @@ class Server:
                         msg = await bot.wait_for('message', check=verify, timeout=30)
                     except asyncio.TimeoutError:
                         await ctx.send(f"Sorry, you took too long to type your decision")
-                        return False
+                        if hasRaised:
+                            format_msg[0]="fold"
+                        else:
+                            format_msg[0]="check"
                     format_msg = msg.content.lower().strip().split()
 
                     # if hasRaised == False and format_msg == "call":
@@ -298,7 +301,7 @@ class Server:
 
                     game.competing[0].setAction(format_msg)
                     if format_msg[0] == "raise":
-                        if(raiseRound > competing[0]._gameBalance):
+                        if(raiseRound > game.competing[0]._gameBalance):
                             continue
                         await self.announcerUI.reportRaise(ctx, game.competing[0].username(), format_msg[1]) 
                         hasRaised = True
