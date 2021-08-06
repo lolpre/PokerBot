@@ -306,7 +306,7 @@ class Server:
                             continue
                             
                         raiseRound=int(format_msg[1])
-                        if(raiseRound > game.competing[0]._gameBalance):
+                        if(raiseRound > game.competing[0]._gameBalance - game.competing[0]._inPot):
                             await self.announcerUI.aboveBalance(ctx, game.competing[0]._user)
                             continue
                         await self.announcerUI.reportRaise(ctx, game.competing[0].username(), format_msg[1]) 
