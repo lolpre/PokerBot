@@ -300,11 +300,11 @@ class Server:
                     #     await ctx.send("No one has raised.")
 
                     game.competing[0].setAction(format_msg)
-                    if format_msg[0] == "raise":
-                        await self.announcerUI.reportRaise(ctx, game.competing[0].username(), format_msg[1]) 
-                        raiseRound=int(format_msg[1])
+                    if format_msg[0] == "raise":  
                         if(raiseRound > game.competing[0]._gameBalance):
                             continue
+                        await self.announcerUI.reportRaise(ctx, game.competing[0].username(), format_msg[1]) 
+                        raiseRound=int(format_msg[1])
                         hasRaised = True
                         game.competing[0]._inPot+=raiseRound
                         game.currentPot+=raiseRound
