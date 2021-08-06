@@ -237,3 +237,9 @@ class Announcer:
     #        user -> a class object. part of the Discord API, the user information 
     async def aboveBalance(self, ctx, user):
         await ctx.send(f"{user.mention} You exceeded your game balance. Please wager a new amount.")
+
+    #outputs the error message that a particpant has wagered an amount that is not numerical
+    # input: ctx -> a class object. part of Discord API, the context of the message
+    #        user -> a class object. part of the Discord API, the user information 
+    async def valueNotDigit(self, ctx, user):
+        await ctx.send(f"{user.mention} Please raise a numerical value.")
