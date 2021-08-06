@@ -57,7 +57,7 @@ class PokerWrapper:
                         await self.pokerUI.playerAlreadyInGame(ctx, user)
                         continue
 
-                    if user != bot.user and len(self.participants) == 8:
+                    if user != bot.user and len(self.participants) == 3:
                         await self.pokerUI.gameIsFull(ctx, user)
                         newPlayer= PokerPlayer(user.name, i, user, self.startingBalance)
                         self.joinQueue.append(newPlayer)
@@ -80,7 +80,7 @@ class PokerWrapper:
     #adds to players to the game from the list of players waiting to be added
     async def addPlayers(self, ctx, players):
         for newPlayer in self.joinQueue:
-            if len(self.participants) == 8:
+            if len(self.participants) == 3:
                 continue
             self.participants.append(newPlayer)
             players[newPlayer._user.id].inGame = True
