@@ -298,6 +298,8 @@ class Server:
 
                     game.competing[0].setAction(format_msg)
                     if format_msg[0] == "raise":
+                        if(raiseRound > competing[0]._gameBalance):
+                            continue
                         await self.announcerUI.reportRaise(ctx, game.competing[0].username(), format_msg[1]) 
                         hasRaised = True
                         raiseRound=int(format_msg[1])
