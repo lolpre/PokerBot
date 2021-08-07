@@ -8,7 +8,17 @@ import asyncio
 import discord
 import math
 
-#this class runs the game functions and uses the other class made to support the game
+'''
+
+This is the PokerWrapper class. This class object represents one instance of 
+a Poker game. It holds all the data for the game including the current players,
+the game balance, the ids, etc. Having each game represented with this class
+object allows for the PokerBot to host more than one game at a time.
+
+
+'''
+
+
 class PokerWrapper:
     def __init__(self, bot):
         self.bot=bot             #this sets the bot in discord to run
@@ -220,9 +230,3 @@ class PokerWrapper:
             x._gameBalance=int(x._gameBalance-x._inPot)
             x._inPot=0
             
-
-    async def setDealer(self, ctx):
-        return
-    
-    async def takeBlinds(self, ctx):
-        return
