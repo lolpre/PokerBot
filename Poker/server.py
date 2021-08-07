@@ -285,17 +285,22 @@ class Server:
                     
                     def verify(m):
                         return game.competing[0]._user == m.author
-
+                    
                     try:
+                        afk=False
                         msg = await bot.wait_for('message', check=verify, timeout=30)
                     except asyncio.TimeoutError:
                         await ctx.send(f"Sorry, you took too long to type your decision")
+                        afk=True
+
+                    format_msg = []
+                    if afk:
                         if hasRaised:
                             format_msg[0]="fold"
                         else:
                             format_msg[0]="check"
-                    format_msg = msg.content.lower().strip().split()
-
+                    else:
+                        format_msg=msg.content.lower().strip().split()
                     # if hasRaised == False and format_msg == "call":
                     #     await ctx.send("No one has raised.")
 
@@ -306,7 +311,8 @@ class Server:
                             continue
                             
                         raiseRound=int(format_msg[1])
-                        if(raiseRound > game.competing[0]._gameBalance - game.competing[0]._inPot):
+                        if(raiseRound > (game.competing[0]._gameBalance-game.competing[0]._inPot)):
+
                             await self.announcerUI.aboveBalance(ctx, game.competing[0]._user)
                             continue
                         await self.announcerUI.reportRaise(ctx, game.competing[0].username(), format_msg[1]) 
