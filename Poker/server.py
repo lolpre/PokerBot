@@ -55,9 +55,9 @@ class Server:
             await ctx.send(embed=embed)
 
     # resets the leaderboard and the balacnes of all players 
-    def reset(self):
-        for player in self.players:
-            player.setBalance(3000)
+    async def reset(self):
+        for key in self.players:
+            self.players[key].setBalance(3000)
         self.resets += 1
     
     # the help command calls this method. the tutorial and list of all 
