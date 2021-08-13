@@ -4,18 +4,11 @@
 
 # Installation
 
-## Beginning Steps
-1. Make bot appication in developer's portal.
-1. Create/Use a server for the bot.
+## Starting Steps
+### 1: Create a Discord Account
+1. Visit [Discord.com](https://discord.com/) to register for an account.
 
 
-
-### 1: Make bot appication in developer's portal.
-
-1. Go to Discord's [Developer Portal](https://discord.com/developers/applications)
-1. Click the new application button and set any name for the application.
-1. After creating the new application, click the menu and select the  section labeled "Bot". In this page select the "Add Bot" button and confirm.
-1. You may set the username of the bot to anything, preferebly Poker Bot.
 
 ### 2: Create/Use a server for the bot.
 
@@ -32,10 +25,28 @@
 
 
 
-
-
 ## Method 2: Run the bot locally on your machine 
 ### Prerequisites
-- Register for a [Discord](https://discord.com/) account. 
 - Install [discord.py](https://discordpy.readthedocs.io/en/stable/intro.html) library.
 - Clone the [repository](https://github.com/lolpre/PokerBot).
+
+
+
+### 1: Make bot appication in developer's portal.
+
+1. Go to Discord's [Developer Portal](https://discord.com/developers/applications)
+1. Click the new application button and set any name for the application.
+1. After creating the new application, click the menu and select the  section labeled "Bot". In this page select the "Add Bot" button and confirm.
+1. You may set the username of the bot to anything, preferebly Poker Bot.
+
+### 2: Collect Bot Token
+
+### 3: Invite the bot
+1. Click on the Application you have created. 
+1. Go to the section labeled "OAuth2". 
+1. In scopes, click on the "Bot" check box. 
+1. Copy the link created below the Scopes list, and go to the link. 
+1. Refer to Method 1 for the remaining steps. 
+
+
+
