@@ -26,7 +26,7 @@ Welcome to Poker Bot! The Poker Bot provides a convenient way to play Poker with
 1. Use this [Discord invite link](https://discord.com/api/oauth2/authorize?client_id=850462222508490803&permissions=8&scope=bot). 
 1. You will be redirected to a Discord page that requests where the bot should operate. A list of servers you are a member of will be listed below. Select the appropriate server. 
 1. Proceed through the steps they provide you. 
-1. Once authorized, your bot has successfully been invited to your server. The bot should be online, which is depicted as a green dot beside the bot’s profile picture. This means that the bot is online and ready to operate. If the bot is offline (depicted as a gray dot), then the bot is offline and not ready to use; proceed to method number 2. 
+1. Once authorized, your bot has successfully been invited to your server. The bot should be online, which is depicted as a green dot beside the bot’s profile picture. This means that the bot is online and ready to operate. If the bot is offline (depicted as a gray dot), then the bot is offline and not ready to use; proceed to method 2. 
 
 
 
