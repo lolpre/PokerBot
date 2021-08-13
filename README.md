@@ -2,11 +2,8 @@
 
 
 
-## Installation
-### Prerequisites
-- Register for a [Discord](https://discord.com/) account. 
-- Install [discord.py](https://discordpy.readthedocs.io/en/stable/intro.html) library.
-- Clone the [repository](https://github.com/lolpre/PokerBot).
+# Installation
+
 ## Steps
 1. Make bot appication in developer's portal.
 1. Create/Use a server for the bot.
@@ -26,3 +23,12 @@
 1. On the Discord application, create a server by pressing the green plus icon located to the left, with the caption "Add a Server"
 1. Then select "Create My Own" and select any prefered option. You may change the name of the server your creating. Afterwards, select the "Create" button.
 1. You now have a server to run the bot on.
+
+## Method 1: Invite the bot to your Discord Server  
+
+
+## Method 2: Run the bot locally on your machine 
+### Prerequisites
+- Register for a [Discord](https://discord.com/) account. 
+- Install [discord.py](https://discordpy.readthedocs.io/en/stable/intro.html) library.
+- Clone the [repository](https://github.com/lolpre/PokerBot).
