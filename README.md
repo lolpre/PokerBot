@@ -31,11 +31,6 @@
 - Clone the [repository](https://github.com/lolpre/PokerBot).
 
 ### Steps:
-1. [Make bot appication in developer's portal.](#1-Make-bot-appication-in-developer's-portal).
-1. [Collect Bot Token](#2-Collect-Bot-Token).
-1. [Invite the bot](#3-Invite-the-bot).
-1. [Running the Bot](#4-Running-the-Bot).
-
 
 ### 1: Make bot appication in developer's portal.
 
