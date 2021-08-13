@@ -52,6 +52,7 @@ Welcome to Poker Bot! The Poker Bot provides a convenient way to play Poker with
 
 
 ### 3: Invite the bot
+1. Go to the Discord [Developer Portal](https://discord.com/developers/applications)
 1. Click on the Application you have created. 
 1. Go to the section labeled "OAuth2". 
 1. In scopes, click on the "Bot" check box. 
