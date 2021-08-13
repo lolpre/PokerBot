@@ -4,7 +4,7 @@
 
 # Installation
 
-## Steps
+## Beginning Steps
 1. Make bot appication in developer's portal.
 1. Create/Use a server for the bot.
 
@@ -25,6 +25,13 @@
 1. You now have a server to run the bot on.
 
 ## Method 1: Invite the bot to your Discord Server  
+1. Use this [Discord invite link](https://discord.com/api/oauth2/authorize?client_id=850462222508490803&permissions=8&scope=bot). 
+1. You will be redirected to a Discord page that requests where the bot should operate. A list of servers you are a member of will be listed below. Select the appropriate server. 
+1. Proceed through the steps they provide you. 
+1. Once authorized, your bot has successfully been invited to your server. The bot should be online, which is depicted as a green dot beside the bot’s profile picture. This means that the bot is online and ready to operate. If the bot is offline (depicted as a gray dot), then the bot is offline and not ready to use; proceed to method number 2. 
+
+
+
 
 
 ## Method 2: Run the bot locally on your machine 
