@@ -2,10 +2,10 @@
 Welcome to Poker Bot! The Poker Bot provides a convenient way to play Poker with a group of people on Discord. It will act as a dealer, managing all players, cards, and currency. The Poker Bot is already hosted on a hosting server. However, due to monetary limitations and security reasons, the Poker Bot may not be readily available at certain times. We have documented two ways to use the Poker Bot. 
 
 ### Contributors: 
-[Josh Park](https://github.com/lolpre)
-[Catherine Chu](https://github.com/chuc4)
-[Kevin Chen](https://github.com/trollface11)
-[Kweku Ninsin](https://github.com/kozin00)
+[Josh Park](https://github.com/lolpre), 
+[Catherine Chu](https://github.com/chuc4), 
+[Kevin Chen](https://github.com/trollface11), 
+[Kweku Ninsin](https://github.com/kozin00), 
 [Ryan Carrido](https://github.com/carrir2)
 
 # Installation
