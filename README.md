@@ -30,6 +30,11 @@
 - Install [discord.py](https://discordpy.readthedocs.io/en/stable/intro.html) library.
 - Clone the [repository](https://github.com/lolpre/PokerBot).
 
+### Steps:
+1. [Make bot appication in developer's portal.](#1-Make-bot-appication-in-developer's-portal).
+1. [Collect Bot Token](#2-Collect-Bot-Token).
+1. [Invite the bot](#3-Invite-the-bot).
+1. [Running the Bot](#4-Running-the-Bot).
 
 
 ### 1: Make bot appication in developer's portal.
@@ -40,6 +45,11 @@
 1. You may set the username of the bot to anything, preferebly Poker Bot.
 
 ### 2: Collect Bot Token
+1. Go to the Discord [Developer Portal](https://discord.com/developers/applications)
+1. Go to the section labeled "Bot". 
+1. Under Token, click on "Copy" and paste it into the source code. For Poker Bot, the token should be pasted in the pokerbot.py file, line 15: TOKEN = os.getenv("TOKEN"). Replace the TOKEN that is in quotes with the token you have copied. 
+
+
 
 ### 3: Invite the bot
 1. Click on the Application you have created. 
@@ -47,6 +57,10 @@
 1. In scopes, click on the "Bot" check box. 
 1. Copy the link created below the Scopes list, and go to the link. 
 1. Refer to Method 1 for the remaining steps. 
+
+### 4: Running the Bot
+1. Run the pokerbot.py file on your local machine. 
+1. Once the bot goes online (depicted with a green dot beside its profile picture), the bot is now available to use. Have fun playing Poker!
 
 
 
