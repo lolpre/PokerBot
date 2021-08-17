@@ -32,9 +32,9 @@ Welcome to Poker Bot! The Poker Bot provides a convenient way to play Poker with
 
 ## Method 2: Run the bot locally on your machine 
 ### Prerequisites
+- Install [Python 3](https://www.python.org/downloads/).
 - Install [discord.py](https://discordpy.readthedocs.io/en/stable/intro.html) library.
 - Clone the [repository](https://github.com/lolpre/PokerBot).
-- Install [Python 3](https://www.python.org/downloads/).
 - Have a terminal or command prompt available. 
 ### Steps:
 
