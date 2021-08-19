@@ -85,5 +85,5 @@ class Deck:
 			self.cards[i], self.cards[r], = self.cards[r], self.cards[i]
 	
 	# This method returns a single card from the deck of cards
-	def drawCard(self):
+	def draw_card(self):
 		return self.cards.pop()
