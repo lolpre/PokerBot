@@ -23,7 +23,7 @@ class Card:
 	# this is for cards above the value of 10
 	# and for the ace
 	# (Jack, Queen, King, Ace) 
-	def getNumVal(self):
+	def get_num_val(self):
 		if self.val=="A":
 			return 0
 		if self.val=="K":
@@ -37,7 +37,7 @@ class Card:
 	# gets the suit of the card 
 	# returns a number value, one number 
 	# representing a suit 
-	def getNumSuit(self):
+	def get_num_suit(self):
 		if self.suit=="Diamonds":
 			return 0
 		if self.suit=="Clubs":
