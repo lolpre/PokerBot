@@ -15,9 +15,9 @@ class Player:
 		self.inGame = False 	#check if player is in game
 
 	# This method returns the current balance of the player
-	def getBalance(self):
+	def get_balance(self):
 		return self.balance
 	
 	# This method sets the balance of the player to a specific value
-	def setBalance(self, value):
+	def set_balance(self, value):
 		self.balance = value #updates player balance after each game
