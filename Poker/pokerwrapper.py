@@ -21,27 +21,27 @@ object allows for the PokerBot to host more than one game at a time.
 
 class PokerWrapper:
     def __init__(self, bot):
-        self.bot=bot             #this sets the bot in discord to run
-        self.game_id=0            #plan to have multiple games so this identifies running games
-        self.game_started = False #check if there is game started
+        self.bot=bot  # this sets the bot in discord to run
+        self.game_id=0  # plan to have multiple games so this identifies running games
+        self.game_started = False # check if there is game started
         self.num_players = 0 
-        self.hard_blind = 0       #represents the higher initial bet
-        self.small_blind=0        #represent lower initial bet
-        self.current_pot = 0      #total reward for the winner of the round
-        self.poker_ui = Announcer()  #this will allow bot to inform users what is happening
+        self.hard_blind = 0  # represents the higher initial bet
+        self.small_blind=0  # represent lower initial bet
+        self.current_pot = 0  # total reward for the winner of the round
+        self.poker_ui = Announcer()  # this will allow bot to inform users what is happening
         self.game_deck = Deck()
         self.community_deck = []
-        self.participants = []   #total people in the game
-        self.competing = []      #users who are still playing the round
-        self.join_queue=[]        #list of players waiting to join the game
-        self.leave_queue=[]       #list of players waiting to leave the game
-        self.starting_balance = 0 #set initial balance of the game
+        self.participants = []  # total people in the game
+        self.competing = []  # users who are still playing the round
+        self.join_queue=[]  # list of players waiting to join the game
+        self.leave_queue=[]  # list of players waiting to leave the game
+        self.starting_balance = 0  # set initial balance of the game
 
-    #internal bot function that waits for command to start the game
+    # Internal bot function that waits for command to start the game.
     async def start_game(self, ctx):
         await self.poker_ui.initiate_game(ctx)
         
-    #starts the game and sets player with the embed as the message being sent
+    # Starts the game and sets player with the embed as the message being sent.
     async def set_players(self, ctx, bot, players):
         embed = discord.Embed(title="Poker: Texas hold 'em",
                               description="Starting Balance: "+str(self.starting_balance)+""" <:chips:865450470671646760>
@@ -79,7 +79,8 @@ class PokerWrapper:
                         players[user.id].in_game = True
                         i += 1
                         
-        # Checks if there is enough players through the check emote it has to be greater than 2 as the bot represents 1 of them.
+        # Checks if there is enough players through the check emote it has 
+        # to be greater than 2 as the bot represents 1 of them.
         if len(self.participants) < 2:
             await ctx.send("Not enough players")
             for p in self.participants:
@@ -100,7 +101,8 @@ class PokerWrapper:
             self.join_queue.remove(new_player)
         
     
-    # Removes players based on the list of players ready to leave and checks if game is still able to play.
+    # Removes players based on the list of players ready to leave and 
+    # checks if game is still able to play.
     async def leave_game(self, ctx, players, enough_players):
         for x in self.leave_queue:
             players[x.user.id].balance+= x.get_game_balance()-self.starting_balance
