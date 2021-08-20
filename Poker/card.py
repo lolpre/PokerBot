@@ -7,23 +7,31 @@
 # card.                      #
 ##############################
 class Card:
-	# suit: the suit of the card
-	# val: the number on the card 
-	# emote: the graphic depiction of the card 
+	
 	def __init__(self, suit, val, emote):
+	"""
+	 suit: the suit of the card
+	 val: the number on the card 
+	 emote: the graphic depiction of the card 
+	"""
 		self.suit = suit
 		self.val = val
 		self.emote = emote
 	
-	# returns the image of the card 
 	def show(self):
+	"""
+	show returns the image of the card. 
+	"""
 		return self.emote
 
-	# gets the number value of the card
-	# this is for cards above the value of 10
-	# and for the ace
-	# (Jack, Queen, King, Ace) 
+	
 	def get_num_val(self):
+	"""
+	 get_num_value gets the number value of the card
+	 this is for cards above the value of 10
+	 and for the ace
+	 (Jack, Queen, King, Ace). 
+	"""
 		if self.val=="A":
 			return 0
 		if self.val=="K":
@@ -34,10 +42,12 @@ class Card:
 			return 10
 		return int(self.val)-1		
 	
-	# gets the suit of the card 
-	# returns a number value, one number 
-	# representing a suit 
 	def get_num_suit(self):
+	"""
+	 get_num_suit gets the suit of the card and  
+	 returns a number value, one number 
+	 representing a suit.
+	"""
 		if self.suit=="Diamonds":
 			return 0
 		if self.suit=="Clubs":
