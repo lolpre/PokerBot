@@ -32,7 +32,7 @@ class Announcer:
         await ctx.send("What is the big blind (minimum bet) amount?")
     
 
-    async def announce_winner(self, ctx, sorted_players, com_deck, currentPot):
+    async def announce_winner(self, ctx, sorted_players, com_deck, current_pot):
         """
         This method announce_winner outputs the announcing message that reveals the winner of the game.
         input: ctx -> part of Discord API, the context of the message
@@ -41,11 +41,11 @@ class Announcer:
         output: none
         """
         winner = sorted_players[0].username()
-        self.showCommCards(com_deck)
-        await ctx.send(winner + " has won, receiving " + str(currentPot))
+        self.show_comm_cards(com_deck)
+        await ctx.send(winner + " has won, receiving " + str(current_pot))
    
 
-    async def ask_move(self, ctx, member, hasRaised, blind, bot):   
+    async def ask_move(self, ctx, member, has_raised, blind):   
         """
         This method ask_move outputs the announcing message that asks participants for their next move. 
         input: ctx -> a class object. part of Discord API, the context of the message
@@ -54,7 +54,7 @@ class Announcer:
                 blind -> a boolean that checks if the blind has been set 
                 bot -> a class object. part of Discord API, the bot information
         """
-        if hasRaised or blind:
+        if has_raised or blind:
             await ctx.send("{}, Would you like to call, raise, or fold?".format(member))
         else:
             await ctx.send("{}, Would you like to check, raise, or fold?".format(member))
@@ -113,14 +113,14 @@ class Announcer:
                 comm_deck -> an array of the Card object, ideally where the community deck is stored
         """
         await ctx.send("**CURRENT COMMUNITY DECK**")
-        commCards=""
+        comm_cards=""
         i=0
         for card in comm_deck:
-            commCards+=card.show()
+            comm_cards+=card.show()
             i+=1
         for j in range(5-i):
-            commCards+="<:back:867926963061411871>"
-        await ctx.send(commCards)
+            comm_cards+="<:back:867926963061411871>"
+        await ctx.send(comm_cards)
         
 
     async def report_raise(self, ctx, name, amount):
@@ -168,7 +168,7 @@ class Announcer:
         """
         await ctx.send("CURRENT BALANCES:")
         for player in pkr_players:
-            await ctx.send(player.username() + ": " + str(player.getGameBalance())+ " <:chips:865450470671646760>")
+            await ctx.send(player.username() + ": " + str(player.get_game_balance()) + " <:chips:865450470671646760>")
     
 
     async def show_player(self, ctx, game):
@@ -178,12 +178,12 @@ class Announcer:
                 game -> a PokerWrapper object. the current game information 
         """
         embed = discord.Embed(title=game.competing[0].username(), 
-        description="Balance: "+str(game.competing[0].getGameBalance())+" <:chips:865450470671646760>" + """
-        In Pot: """ + str(game.competing[0]._inPot)+""" <:chips:865450470671646760>
+        description="Balance: "+str(game.competing[0].get_game_balance())+" <:chips:865450470671646760>" + """
+        In Pot: """ + str(game.competing[0].inPot)+""" <:chips:865450470671646760>
         
         Current Pot: """+ str(game.currentPot),
         color=discord.Color.green())
-        embed.set_thumbnail(url=game.competing[0]._user.avatar_url)
+        embed.set_thumbnail(url=game.competing[0].user.avatar_url)
         await ctx.send(embed=embed)
 
 

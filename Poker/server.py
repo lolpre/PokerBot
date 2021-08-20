@@ -118,7 +118,7 @@ class Server:
         if ctx.author.id not in self.players:
             await self.announcer_ui.noAccount(ctx, ctx.author)
             return False
-        if self.players[ctx.author.id].inGame:
+        if self.players[ctx.author.id].in_game:
             await self.announcer_ui.player_already_in_game(ctx, ctx.author)
             return False
         return True
@@ -181,13 +181,13 @@ class Server:
             return
 
         for x in self.games[id].leave_queue:
-            if x._user.id == ctx.author.id:
+            if x.user.id == ctx.author.id:
                 await self.announcer_ui.already_in_leave_queue(ctx, ctx.author)
                 return
 
         if id in self.games:
             for x in self.games[id].participants:
-                if x._user.id == ctx.author.id:
+                if x.user.id == ctx.author.id:
                     self.games[id].leave_queue.append(x)
                     await self.announcer_ui.added_to_leave_queue(ctx, x.user)
                     return
@@ -204,7 +204,7 @@ class Server:
             return
         
         for x in self.games[id].join_queue:
-            if x._user.id == ctx.author.id:
+            if x.user.id == ctx.author.id:
                 await self.announcer_ui.already_in_join_queue(ctx, ctx.author)
                 return
 
@@ -247,7 +247,7 @@ class Server:
         comm_deck = game.community_deck
         await self.announcer_ui.show_comm_cards(ctx, comm_deck)
         for x in game.participants:
-            comm_and_hand = comm_deck + x._hand
+            comm_and_hand = comm_deck + x.hand
             eval = EvaluateHand(comm_and_hand)
             x.win_condition = eval.evaluate()
             await x.user.send(x.get_win_cond())
@@ -305,10 +305,10 @@ class Server:
                 if game.competing[0].get_action() == "called blind":
                     blind = False
                 await self.announcer_ui.show_player(ctx,game)
-                await self.announcer_ui.ask_move(ctx, "<@"+str(game.competing[0]._user.id)+">", has_raised, blind, bot)
+                await self.announcer_ui.ask_move(ctx, "<@"+str(game.competing[0].user.id)+">", has_raised, blind, bot)
                 
                 def verify(m):
-                    return game.competing[0]._user == m.author
+                    return game.competing[0].user == m.author
                 
                 try:
                     afk = False
@@ -329,13 +329,13 @@ class Server:
                 game.competing[0].set_action(format_msg)
                 if format_msg[0] == "raise":  
                     if not format_msg[1].isdigit():
-                        await self.announcer_ui.value_not_digit(ctx, game.competing[0]._user)
+                        await self.announcer_ui.value_not_digit(ctx, game.competing[0].user)
                         continue
                         
                     raise_round=int(format_msg[1])
                     if(raise_round > (game.competing[0].game_balance-game.competing[0].in_pot)):
 
-                        await self.announcer_ui.above_balance(ctx, game.competing[0]._user)
+                        await self.announcer_ui.above_balance(ctx, game.competing[0].user)
                         continue
                     await self.announcer_ui.reportRaise(ctx, game.competing[0].username(), format_msg[1]) 
                     has_raised = True
@@ -378,7 +378,7 @@ class Server:
         comm_deck = game.community_deck
         await game.pokerUI.show_comm_cards(ctx, comm_deck)
         for x in game.participants:
-            comm_and_hand = comm_deck + x._hand
+            comm_and_hand = comm_deck + x.hand
             eval = EvaluateHand(comm_and_hand)
             x.win_condition = eval.evaluate()
             await x.user.send(x.get_win_cond())
@@ -393,7 +393,7 @@ class Server:
         comm_deck = game.community_deck
         await game.pokerUI.show_comm_cards(ctx, comm_deck)
         for x in game.participants:
-            comm_and_hand = comm_deck + x._hand
+            comm_and_hand = comm_deck + x.hand
             eval = EvaluateHand(comm_and_hand)
             x.win_condition = eval.evaluate()
             await x.user.send(x.get_win_cond())
@@ -409,8 +409,8 @@ class Server:
             await self.announcer_ui.show_cards(ctx, x.hand)
         winners = game.find_winner()  # needs to return a list of winners
         for x in winners:
-            embed = discord.Embed(title="WINNER: "+x._username, description= x.get_win_cond(), color=discord.Color.green())
-            embed.set_image(url=x._user.avatar_url)
+            embed = discord.Embed(title="WINNER: "+x.username, description= x.get_win_cond(), color=discord.Color.green())
+            embed.set_image(url=x.user.avatar_url)
             await ctx.send(embed=embed)
             x.game_balance += int(game.current_pot / len(winners))
 
@@ -426,7 +426,7 @@ class Server:
         await self.announcer_ui.ask_leave(ctx)
         await asyncio.sleep(10)
         await game.leave_game(ctx, self.players, True)
-        await game._ps(ctx, self.players)
+        await game.add_players(ctx, self.players)
         if len(game.participants)<2:
             for x in game.participants:
                 game.leave_queue.append(x)
