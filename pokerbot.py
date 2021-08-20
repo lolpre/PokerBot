@@ -21,7 +21,7 @@ bot.remove_command('help')
 # This is the main function that runs the Discord bot
 def main():
     try:
-        bot.run("ODUwNDYyMjIyNTA4NDkwODAz.YLqEqg.5_p-7OiYuJR6svZolA3s-StTfPc")
+        bot.run(TOKEN)
     finally:
         print(f'End running at {time.asctime(time.localtime(time.time()))}')
 
