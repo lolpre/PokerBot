@@ -8,14 +8,17 @@ This deck class represents the main deck used in the poker game.
 It builds a deck, shuffles it and returns one card at a time
 when drawCard() is called.
 '''
-	
-	# This is the constructor for the deck class
-	# It initializes the list of cards by calling the build method
+	"""
+	This is the constructor for the deck class.
+	It initializes the list of cards by calling the build method.
+	"""
 	def __init__(self):
 		self.cards = [] # Stores the cards present in the deck
 		self.build() # Creates the deck of cards
 	
-	# This method builds the deck by adding Card objects to the cards list
+	"""
+	This method builds the deck by adding Card objects to the cards list.
+	"""
 	def build(self):
 		self.cards.append(Card("Spades", '2', "<:2s:865464492343558194>"))
 		self.cards.append(Card("Spades", '3', "<:3s:865464492434391071>"))
@@ -74,17 +77,23 @@ when drawCard() is called.
 		self.cards.append(Card("Hearts", 'A', "<:Ah:865455728339451914>"))
 
 				
-	# This method shows the cards present in the deck
+	"""
+	This method shows the cards present in the deck.
+	"""
 	def show(self):
 		for c in self.cards:
 			c.show()
 	
-	# This method shuffles the deck of cards in a random order
+	"""
+	This method shuffles the deck of cards in a random order.
+	"""
 	def shuffle(self):
 		for i in range(len(self.cards) -1, 0, -1):
 			r = random.randint(0, i)
 			self.cards[i], self.cards[r], = self.cards[r], self.cards[i]
 	
-	# This method returns a single card from the deck of cards
+	"""
+	This method returns a single card from the deck of cards.
+	"""
 	def draw_card(self):
 		return self.cards.pop()
