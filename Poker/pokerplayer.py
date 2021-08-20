@@ -1,18 +1,10 @@
-import asyncio
-import discord
-from Poker.deck import Deck
-from Poker.card import Card
-
-'''
-
-This is the class for each Poker Player object.
-A Poker Player object will be created for each user before
-they can join/play a poker game. The poker game interacts with 
-only the Poker Player objects and not the Player objects.
-
-'''
 class PokerPlayer:
-    
+    """
+    This is the class for each Poker Player object.
+    A Poker Player object will be created for each user before
+    they can join/play a poker game. The poker game interacts with 
+    only the Poker Player objects and not the Player objects.
+    """
     
     def __init__(self, username, seat_number, user, start_balance):
         """This is the constructor for the PokerPlayer class."""
@@ -49,7 +41,7 @@ class PokerPlayer:
         return self.seat_number
 
     
-    def get+status(self):
+    def get_status(self):
         """This method returns the PokerPlayer’s status in the game."""
         return self.in_game
 
@@ -68,7 +60,7 @@ class PokerPlayer:
 
    
     def add_card(self, c):
-         """
+        """
         This method adds a maximum of 2 cards to the 
         PokerPlayer's hand.
         """
@@ -78,7 +70,7 @@ class PokerPlayer:
   
     def get_game_balance(self):
         """This method returns the PokerPlayer's gameBalance."""
-        return self.game_balance-self.in_pot
+        return self.game_balance - self.in_pot
     
     
     
