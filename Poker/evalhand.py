@@ -1,17 +1,19 @@
 from Poker.card import Card
 from Poker.pokerplayer import PokerPlayer
 
-'''
 
-This is the EvaluateHand class. This class's sole purpose is to
-evaluate the given hand. It runs an algorithm that checks to see
-what is the best combination for the hand. Such combinations are
-a Royal Flush, Two Pair, Straight Flush, Four of a Kind, etc.
-
-'''
 
 class EvaluateHand:
-    
+    '''
+    EvaluateHand
+
+    This is the EvaluateHand class. This class's sole purpose is to
+    evaluate the given hand. It runs an algorithm that checks to see
+    what is the best combination for the hand. Such combinations are
+    a Royal Flush, Two Pair, Straight Flush, Four of a Kind, etc.
+
+    '''
+
     def __init__(self, hand):
         """Constructor to Evaluate Hand. Sets hand to all_cards List."""
         self.all_cards= hand
