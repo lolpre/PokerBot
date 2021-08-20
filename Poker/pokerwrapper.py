@@ -21,20 +21,20 @@ object allows for the PokerBot to host more than one game at a time.
 
 class PokerWrapper:
     def __init__(self, bot):
-        self.bot=bot  # this sets the bot in discord to run
-        self.game_id=0  # plan to have multiple games so this identifies running games
+        self.bot = bot  # this sets the bot in discord to run
+        self.game_id = 0  # plan to have multiple games so this identifies running games
         self.game_started = False # check if there is game started
         self.num_players = 0 
         self.hard_blind = 0  # represents the higher initial bet
-        self.small_blind=0  # represent lower initial bet
+        self.small_blind = 0  # represent lower initial bet
         self.current_pot = 0  # total reward for the winner of the round
         self.poker_ui = Announcer()  # this will allow bot to inform users what is happening
         self.game_deck = Deck()
         self.community_deck = []
         self.participants = []  # total people in the game
         self.competing = []  # users who are still playing the round
-        self.join_queue=[]  # list of players waiting to join the game
-        self.leave_queue=[]  # list of players waiting to leave the game
+        self.join_queue = []  # list of players waiting to join the game
+        self.leave_queue = []  # list of players waiting to leave the game
         self.starting_balance = 0  # set initial balance of the game
 
     
@@ -47,14 +47,14 @@ class PokerWrapper:
     async def set_players(self, ctx, bot, players):
         """Starts the game and sets player with the embed as the message being sent."""
         
-        embed = discord.Embed(title="Poker: Texas hold 'em",
-                              description="Starting Balance: "+str(self.starting_balance)+""" <:chips:865450470671646760>
+        embed = discord.Embed(title = "Poker: Texas hold 'em",
+                              description = "Starting Balance: "+str(self.starting_balance)+""" <:chips:865450470671646760>
         Min Bet: """+str(self.hard_blind)+""" <:chips:865450470671646760>
         \nReact to Join!""",
-            color=discord.Color.green())
+            color = discord.Color.green())
         
         # The bot will wait until all responces or until time is up
-        message = await ctx.send(embed=embed)
+        message = await ctx.send(embed = embed)
         await message.add_reaction('✅')
         await asyncio.sleep(10)
 
@@ -75,11 +75,11 @@ class PokerWrapper:
 
                     if user != bot.user and len(self.participants) == 8:
                         await self.poker_ui.game_is_full(ctx, user)
-                        new_player= PokerPlayer(user.name, i, user, self.starting_balance)
+                        new_player = PokerPlayer(user.name, i, user, self.starting_balance)
                         self.join_queue.append(new_player)
 
                     elif user != bot.user:
-                        new_player= PokerPlayer(user.name, i, user, self.starting_balance)
+                        new_player = PokerPlayer(user.name, i, user, self.starting_balance)
                         self.participants.append(new_player)
                         players[user.id].in_game = True
                         i += 1
@@ -116,7 +116,7 @@ class PokerWrapper:
         """
         
         for x in self.leave_queue:
-            players[x.user.id].balance+= x.get_game_balance()-self.starting_balance
+            players[x.user.id].balance += x.get_game_balance()-self.starting_balance
             players[x.user.id].in_game = False
             self.participants.remove(x)
             if enough_players:
@@ -256,6 +256,6 @@ class PokerWrapper:
         self.competing.clear()
         for x in self.participants:
             x.hand = []
-            x.game_balance=int(x.game_balance-x.in_pot)
-            x.in_pot=0
+            x.game_balance = int(x.game_balance-x.in_pot)
+            x.in_pot = 0
             
