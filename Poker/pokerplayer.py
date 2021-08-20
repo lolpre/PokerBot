@@ -29,16 +29,16 @@ class PokerPlayer:
         await self.user.send(hand_string)
 
     
-    def username(self):
+    def get_username(self):
         """This method returns the PokerPlayer’s username."""
         return self.username
     
-    def seat_number(self):
-        """
-        This method returns the PokerPlayer's seat number within the
-        current game.
-        """
-        return self.seat_number
+    # def get_seat_number(self):
+    #     """
+    #     This method returns the PokerPlayer's seat number within the
+    #     current game.
+    #     """
+    #     return self.seat_number
 
     
     def get_status(self):
