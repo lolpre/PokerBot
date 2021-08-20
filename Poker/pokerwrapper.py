@@ -1,6 +1,6 @@
 """
 PokerWrapper.
-    """
+"""
 import asyncio
 import math
 import discord
