@@ -1,15 +1,14 @@
 """
-SERVER                                                       
+SERVER
 """
 
+import asyncio
 from Poker.pokerwrapper import PokerWrapper
 from Poker.announcer import Announcer
 from Poker.pokerplayer import PokerPlayer
 from Poker.evalhand import EvaluateHand
 import discord
 from Poker.player import Player
-import asyncio
-
 
 class Server:
     """
@@ -351,7 +350,7 @@ class Server:
                         continue
 
                     raise_round = int(format_msg[1])
-                    if(raise_round > game.competing[0].game_balance - game.competing[0].in_pot):
+                    if raise_round > game.competing[0].game_balance - game.competing[0].in_pot:
 
                         await self.announcer_ui.above_balance(ctx, game.competing[0].user)
                         continue
@@ -396,11 +395,11 @@ class Server:
         game.add_card_to_comm()
         comm_deck = game.community_deck
         await game.poker_ui.show_comm_cards(ctx, comm_deck)
-        for x in game.participants:
-            comm_and_hand = comm_deck + x.hand
+        for player in game.participants:
+            comm_and_hand = comm_deck + player.hand
             eval = EvaluateHand(comm_and_hand)
-            x.win_condition = eval.evaluate()
-            await x.user.send(x.get_win_cond())
+            player.win_condition = eval.evaluate()
+            await player.user.send(player.get_win_cond())
 
     async def river(self, ctx, game):
         """
@@ -411,11 +410,11 @@ class Server:
         game.add_card_to_comm()
         comm_deck = game.community_deck
         await game.poker_ui.show_comm_cards(ctx, comm_deck)
-        for x in game.participants:
-            comm_and_hand = comm_deck + x.hand
+        for player in game.participants:
+            comm_and_hand = comm_deck + player.hand
             eval = EvaluateHand(comm_and_hand)
-            x.win_condition = eval.evaluate()
-            await x.user.send(x.get_win_cond())
+            player.win_condition = eval.evaluate()
+            await player.user.send(player.get_win_cond())
 
     async def find_winner(self, ctx, game):
         """
@@ -423,17 +422,17 @@ class Server:
         input: ctx -> a class object. part of Discord API, the context of the message
                game -> a PokerWrapper object, holds the game information
         """
-        for x in game.competing:
-            await ctx.send("**"+x.get_username()+"'s Hand:**")
-            await self.announcer_ui.show_cards(ctx, x.hand)
+        for player in game.competing:
+            await ctx.send("**" + player.get_username() + "'s Hand:**")
+            await self.announcer_ui.show_cards(ctx, player.hand)
         winners = game.find_winner()  # needs to return a list of winners
-        for x in winners:
+        for player in winners:
             embed = discord.Embed(
-                title="WINNER: " + x.username,
-                description=x.get_win_cond(), color=discord.Color.green())
-            embed.set_image(url=x.user.avatar_url)
+                title="WINNER: " + player.username,
+                description=player.get_win_cond(), color=discord.Color.green())
+            embed.set_image(url=player.user.avatar_url)
             await ctx.send(embed=embed)
-            x.game_balance += int(game.current_pot / len(winners))
+            player.game_balance += int(game.current_pot / len(winners))
 
     async def reset_round(self, ctx, game, bot):
         """
@@ -449,8 +448,8 @@ class Server:
         await game.leave_game(ctx, self.players, True)
         await game.add_players(ctx, self.players)
         if len(game.participants) < 2:
-            for x in game.participants:
-                game.leave_queue.append(x)
+            for player in game.participants:
+                game.leave_queue.append(player)
             await ctx.send("Not enough players! Terminating game")
             await game.leave_game(ctx, self.players, False)
             del self.games[ctx.message.channel.id]
