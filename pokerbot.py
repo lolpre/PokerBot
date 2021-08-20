@@ -1,25 +1,24 @@
-import discord
-from discord.ext import commands
-import time
-import os
-
-from Poker.server import Server
-
 """
-This is the main class for the Poker Bot. 
+This is the main class for the Poker Bot.
 It configures the Discord bot and uses the token to start it.
 """
+import os
+import time
+import discord
+from discord.ext import commands
+
+from Poker.server import Server
 
 TOKEN = os.getenv("TOKEN")
 
 intents = discord.Intents.default()
 intents.members = True
-description = '''A bot to play Poker with.'''
-bot = commands.Bot(command_prefix='.', description=description)
+DESCRIPTION = '''A bot to play Poker with.'''
+bot = commands.Bot(command_prefix='.', description = DESCRIPTION)
 bot.remove_command('help')
 
-# This is the main function that runs the Discord bot
 def main():
+    """This is the main function that runs the Discord bot"""
     try:
         bot.run(TOKEN)
     finally:
@@ -28,7 +27,7 @@ def main():
 @bot.event
 async def on_ready():
     """
-    This is a Discord event that executes 
+    This is a Discord event that executes
     when the bot first comes online.
     """
     print('Logged in as')
@@ -45,7 +44,7 @@ async def help(ctx):
     It returns the help menu for the bot.
     """
     await server_bot.help(ctx)
-    
+
 @bot.command()
 async def create(ctx):
     """
@@ -53,7 +52,7 @@ async def create(ctx):
     It creates a new player object and adds it to the server.
     """
     await server_bot.add_player(ctx)
-        
+
 @bot.command()
 async def top(ctx):
     """
@@ -70,31 +69,31 @@ async def balance(ctx):
     """
     await server_bot.get_balance(ctx)
 
-@bot.command() 
-async def p(ctx):
+@bot.command(aliases = ['p'])
+async def poker(ctx):
     """
     This is the function that handles the poker command.
     it starts a new poker game.
     """
     await server_bot.initiate_game(ctx, ctx.message.channel.id, bot)
 
-@bot.command() 
+@bot.command()
 async def join(ctx):
     """
     This is the function that handles the join command.
     It allows players to join an existing poker game.
     """
-    await server_bot.join(ctx, ctx.message.channel.id)        
+    await server_bot.join(ctx, ctx.message.channel.id)
 
-@bot.command() 
+@bot.command()
 async def leave(ctx):
     """
     This is the function that handles the leave command.
     It removes a player from an existing poker game.
     """
-    await server_bot.leave(ctx, ctx.message.channel.id)      
+    await server_bot.leave(ctx, ctx.message.channel.id)
 
-@bot.command() 
+@bot.command()
 async def reset(ctx):
     """
     This is the function that handles the reset command.
@@ -103,6 +102,6 @@ async def reset(ctx):
     """
     if ctx.message.author.guild_permissions.administrator:
         await server_bot.reset()
-    
+
 if __name__ == '__main__':
     main()
