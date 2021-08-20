@@ -8,18 +8,20 @@ This deck class represents the main deck used in the poker game.
 It builds a deck, shuffles it and returns one card at a time
 when drawCard() is called.
 '''
+
+	def __init__(self):
 	"""
 	This is the constructor for the deck class.
 	It initializes the list of cards by calling the build method.
 	"""
-	def __init__(self):
 		self.cards = [] # Stores the cards present in the deck
 		self.build() # Creates the deck of cards
 	
+
+	def build(self):
 	"""
 	This method builds the deck by adding Card objects to the cards list.
 	"""
-	def build(self):
 		self.cards.append(Card("Spades", '2', "<:2s:865464492343558194>"))
 		self.cards.append(Card("Spades", '3', "<:3s:865464492434391071>"))
 		self.cards.append(Card("Spades", '4', "<:4s:865464492384714782>"))
