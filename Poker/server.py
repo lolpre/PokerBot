@@ -1,3 +1,7 @@
+"""
+SERVER                                                       
+"""
+
 from Poker.pokerwrapper import PokerWrapper
 from Poker.announcer import Announcer
 from Poker.pokerplayer import PokerPlayer
@@ -6,23 +10,24 @@ import discord
 from Poker.player import Player
 import asyncio
 
+
 class Server:
     """
-    SERVER:                                              
     The Server class manages all the Poker Game classes  
     and executes the game. All the methods of other      
-    classes will be called in this server.               
+    classes will be called in this server. 
     """
-    
+
     def __init__(self, bot):
         """
         the constructor of Server
         input: bot -> a class object. part of the Discord API, the bot information 
-        initialized values: games -> a set of PokerWrapper objects. a set of all the ongoing games 
-                            bot -> initializes the bot 
-                            players -> a set of Player objects. a set of all registered players in a server
-                            resets -> an integer. the number of times the administrator reset the leaderboard
-                            announcer_ui -> an Announcer object for the output
+        initialized values: 
+            games -> a set of PokerWrapper objects. a set of all the ongoing games 
+            bot -> initializes the bot 
+            players -> a set of Player objects. a set of all registered players in a server
+            resets -> an integer. the number of times the administrator reset the leaderboard
+            announcer_ui -> an Announcer object for the output
         """
 
         self.games = {}
@@ -30,7 +35,7 @@ class Server:
         self.players = {}
         self.resets = 0
         self.announcer_ui = Announcer()
-    
+
     async def add_player(self, ctx):
         """
         adds the player to the player set 
@@ -41,25 +46,27 @@ class Server:
             self.players[ctx.author.id] = player
             await ctx.send("You have created an account!")
             return True
-        else:
-            await ctx.send("You already created an account!")
-            return False
-    
+
+        await ctx.send("You already created an account!")
+        return False
+
     async def get_balance(self, ctx):
         """
         gets the balance of a player 
         input: ctx -> a class object. part of Discord API, the context of the message
         """
         if ctx.author.id not in self.players:
-            await ctx.send("You do not have an account! Use the .create command to create an account!")
+            await ctx.send("You do not have an account! \
+                            Use the .create command to create an account!")
         else:
             player = self.players[ctx.author.id]
             balance = player.get_balance()
-            embed = discord.Embed(title = ctx.author.name + "'s Balance:", 
-            description = str(balance)+" <:chips:865450470671646760>",
-            color = discord.Color.green())
-            embed.set_thumbnail(url = ctx.author.avatar_url)
-            await ctx.send(embed = embed)
+            embed = discord.Embed(title=ctx.author.name + "'s Balance:",
+                                  description=str(
+                                      balance)+" <:chips:865450470671646760>",
+                                  color=discord.Color.green())
+            embed.set_thumbnail(url=ctx.author.avatar_url)
+            await ctx.send(embed=embed)
 
     async def reset(self):
         """resets the leaderboard and the balacnes of all players"""
@@ -67,43 +74,46 @@ class Server:
         for key in self.players:
             self.players[key].set_balance(3000)
         self.resets += 1
-    
+
     async def help(self, ctx):
         """
         the help command calls this method. the tutorial and list of all 
         the commands to help a new user get started with the bot 
         input: ctx -> a class object. part of Discord API, the context of the message
         """
-        embed = discord.Embed(title="List of Commands", 
-        description = """**.create** - Create your profile for the server 
+        embed = discord.Embed(title="List of Commands",
+                              description="""**.create** - Create your profile for the server 
         **.p** - Create and play a game of Texas Hold'Em Poker
         **.balance** - Check to see how many chips you have
         **.top** - Check the leaderboards to see who is on top
         **.join** - Join an already existing Poker game
         **(Mods Only) .reset** - Reset the balances of everyone in the server""",
-        color = 0xffffff)
-        embed.set_thumbnail(url = "https://s.wsj.net/public/resources/images/JR-AA451_IFPOKE_GR_20191031164807.jpg")
-        await ctx.send(embed = embed)
-    
+                              color=0xffffff)
+        embed.set_thumbnail(url="https://s.wsj.net/public/resources/\
+                            images/JR-AA451_IFPOKE_GR_20191031164807.jpg")
+        await ctx.send(embed=embed)
+
     async def print_leaderboard(self, ctx):
         """
         This method outputs the formatted leaderboard and sorts leaderboard by player balance. 
         input: ctx -> a class object. part of Discord API, the context of the message.
         """
-        sort_byvalue=sorted(self.players.items(),key=lambda x:x[1].balance,reverse=True)
+        sort_byvalue = sorted(self.players.items(),
+                              key=lambda x: x[1].balance, reverse=True)
         leaderboard = ""
         k = 1
         for i in sort_byvalue:
             name = str(await self.bot.fetch_user(i[1].id))
-            leaderboard+= str(k)+". "+name+" - "+ str(i[1].balance) + " <:chips:865450470671646760>\n"
+            leaderboard += str(k)+". "+name+" - " + \
+                str(i[1].balance) + " <:chips:865450470671646760>\n"
             k += 1
         embed = discord.Embed(title=ctx.message.guild.name + " Leaderboard:",
-                description = leaderboard,
-                color = discord.Color.red())
-        embed.set_thumbnail(url = ctx.message.guild.icon_url) 
-        await ctx.send(embed = embed)
+                              description=leaderboard,
+                              color=discord.Color.red())
+        embed.set_thumbnail(url=ctx.message.guild.icon_url)
+        await ctx.send(embed=embed)
 
-    async def validate_game(self, ctx): 
+    async def validate_game(self, ctx):
         """This method checks if in game in channel is in progress."""
         if ctx.message.channel.id in self.games:
             await self.announcer_ui.game_already_in_progress(ctx)
@@ -122,8 +132,8 @@ class Server:
             await self.announcer_ui.player_already_in_game(ctx, ctx.author)
             return False
         return True
-    
-    async def initiate_game(self, ctx, id, bot):
+
+    async def initiate_game(self, ctx, id_, bot):
         """
         This method initializes the game.
         input: ctx -> a class object. part of Discord API, the context of the message
@@ -132,17 +142,17 @@ class Server:
                bot -> a class object. part of the Discord API the bot information. 
         """
         new_game = PokerWrapper(bot)
-        if await self.start_game(ctx, new_game, bot) == False:
+        if await self.start_game(ctx, new_game, bot) is False:
             return
-        self.games[id] = new_game
+        self.games[id_] = new_game
         bool_val = await new_game.set_players(ctx, bot, self.players)
-        if bool_val == False:
-            del self.games[id] 
+        if bool_val is False:
+            del self.games[id_]
             return
         await self.start_rounds(ctx, new_game, bot)
         await self.find_winner(ctx, new_game)
         await self.reset_round(ctx, new_game, bot)
-     
+
     async def redo_game(self, ctx, game, bot):
         """
         This method re-initializes the game.
@@ -153,7 +163,7 @@ class Server:
         await self.start_rounds(ctx, game, bot)
         await self.find_winner(ctx, game)
         await self.reset_round(ctx, game, bot)
- 
+
     async def start_game(self, ctx, game, bot):
         """
         This method begins the gameplay.
@@ -161,37 +171,37 @@ class Server:
                game -> a PokerWrapper class object. holds game information 
                bot -> a class object. part of the Discord API, the bot information
         """
-        if await self.validate_player(ctx) == False:
+        if await self.validate_player(ctx) is False:
             return False
-        if await self.validate_game(ctx) == False:
+        if await self.validate_game(ctx) is False:
             return False
         await game.start_game(ctx)
-        await game.set_balance(ctx) #change this function later
+        await game.set_balance(ctx)  # change this function later
         await game.set_blind(ctx, bot)
-        
-    async def leave(self, ctx, id):
+
+    async def leave(self, ctx, id_):
         """
         This method implements the leave command and is called when a
         player wants to leave the game.
         input: ctx -> a class object. part of Discord API, the context of the message
                id -> the game id. an integer.
         """
-        if id not in self.games:
+        if id_ not in self.games:
             self.announcer_ui.no_game(ctx)
             return
 
-        for x in self.games[id].leave_queue:
-            if x.user.id == ctx.author.id:
+        for player in self.games[id_].leave_queue:
+            if player.user.id == ctx.author.id:
                 await self.announcer_ui.already_in_leave_queue(ctx, ctx.author)
                 return
 
-        if id in self.games:
-            for x in self.games[id].participants:
-                if x.user.id == ctx.author.id:
-                    self.games[id].leave_queue.append(x)
-                    await self.announcer_ui.added_to_leave_queue(ctx, x.user)
+        if id_ in self.games:
+            for player in self.games[id_].participants:
+                if player.user.id == ctx.author.id:
+                    self.games[id_].leave_queue.append(player)
+                    await self.announcer_ui.added_to_leave_queue(ctx, player.user)
                     return
-                
+
             await self.announcer_ui.not_in_game(ctx, ctx.author)
 
     async def join(self, ctx, id):
@@ -200,20 +210,21 @@ class Server:
         input: ctx -> a class object. part of Discord API, the context of the message
                id -> the game id. an integer 
         """
-        if await self.validate_player(ctx) == False:
+        if await self.validate_player(ctx) is False:
             return
-        
-        for x in self.games[id].join_queue:
-            if x.user.id == ctx.author.id:
+
+        for player in self.games[id].join_queue:
+            if player.user.id == ctx.author.id:
                 await self.announcer_ui.already_in_join_queue(ctx, ctx.author)
                 return
 
         if id in self.games:
-            self.games[id].join_queue.append(PokerPlayer(ctx.message.author.name, 0, ctx.message.author, self.games[id].starting_balance))
+            self.games[id].join_queue.append(PokerPlayer(
+                ctx.message.author.name, 0, ctx.message.author, self.games[id].starting_balance))
             await self.announcer_ui.added_to_join_queue(ctx, ctx.author)
         else:
             await self.announcer_ui.no_game(ctx)
-     
+
     async def start_rounds(self, ctx, game, bot):
         """
         This method begins the round of a game. 
@@ -224,7 +235,7 @@ class Server:
         for i in game.participants:
             game.competing.append(i)
         await game.deal_cards(bot)  # needs to send dm's
-        await self.take_blinds(ctx,game)  # needs to be implemented
+        await self.take_blinds(ctx, game)  # needs to be implemented
         await self.next_turns(ctx, game, bot)
         await self.flop(ctx, game)
         if len(game.competing) != 1:
@@ -246,11 +257,11 @@ class Server:
         game.create_comm_deck()
         comm_deck = game.community_deck
         await self.announcer_ui.show_comm_cards(ctx, comm_deck)
-        for x in game.participants:
-            comm_and_hand = comm_deck + x.hand
+        for player in game.participants:
+            comm_and_hand = comm_deck + player.hand
             eval = EvaluateHand(comm_and_hand)
-            x.win_condition = eval.evaluate()
-            await x.user.send(x.get_win_cond())
+            player.win_condition = eval.evaluate()
+            await player.user.send(player.get_win_cond())
 
     async def take_blinds(self, ctx, game):
         """
@@ -259,20 +270,25 @@ class Server:
         input: ctx -> a class object. part of Discord API, the context of the message
                game -> a PokerWrapper object, holds the game information 
         """
-        await self.announcer_ui.show_player(ctx,game)
+        await self.announcer_ui.show_player(ctx, game)
         game.competing[0].in_pot = game.small_blind
-        await ctx.send(game.competing[0].get_username() + "\nSmall Blind: " + str(game.small_blind)+" <:chips:865450470671646760>\n")
+        await ctx.send(game.competing[0].get_username()
+                       + "\nSmall Blind: "
+                       + str(game.small_blind)
+                       + " <:chips:865450470671646760>\n")
         game.current_pot += game.competing[0].in_pot
         temp = game.competing.pop(0)
         game.competing.append(temp)
 
-        await self.announcer_ui.show_player(ctx,game)
-        game.competing[0].in_pot=game.hard_blind
-        await ctx.send(game.competing[0].get_username() + "\nBig Blind: " + str(game.hard_blind)+" <:chips:865450470671646760>\n")
+        await self.announcer_ui.show_player(ctx, game)
+        game.competing[0].in_pot = game.hard_blind
+        await ctx.send(game.competing[0].get_username() 
+                       + "\nBig Blind: " 
+                       + str(game.hard_blind)
+                       + " <:chips:865450470671646760>\n")
         game.competing[0].set_action("blind")
-        game.current_pot+=game.competing[0].in_pot
+        game.current_pot += game.competing[0].in_pot
 
-    
     async def next_turns(self, ctx, game, bot):
         """
         This method begins asking players for what their plan of action is. Players can either 
@@ -289,12 +305,13 @@ class Server:
             raise_round = 0
             while True:
                 called_action = False
-                if (game.competing[0].get_action() == "raise" and game.competing[0].in_pot == raise_amt) or i == len(game.competing):
-                    for x in game.competing:
-                        x.set_action(0)
+                if (game.competing[0].get_action() == "raise" \
+                        and game.competing[0].in_pot == raise_amt) or i == len(game.competing):
+                    for player in game.competing:
+                        player.set_action(0)
                     return
                 if game.competing[0].get_action() == "blind":
-                    blind=True
+                    blind = True
                     raise_amt = game.competing[0].in_pot
                     raise_round = game.competing[0].in_pot
                     game.competing[0].set_action("called blind")
@@ -305,16 +322,17 @@ class Server:
                 if game.competing[0].get_action() == "called blind":
                     blind = False
                 await self.announcer_ui.show_player(ctx, game)
-                await self.announcer_ui.ask_move(ctx, "<@"+str(game.competing[0].user.id)+">", has_raised, blind)
-                
-                def verify(m):
-                    return game.competing[0].user == m.author
-                
+                await self.announcer_ui.ask_move(ctx, "<@"+str(game.competing[0].user.id)+">",
+                                                has_raised, blind)
+
+                def verify(message):
+                    return game.competing[0].user == message.author
+
                 try:
                     afk = False
                     msg = await bot.wait_for('message', check=verify, timeout=30)
                 except asyncio.TimeoutError:
-                    await ctx.send(f"Sorry, you took too long to type your decision")
+                    await ctx.send("Sorry, you took too long to type your decision")
                     afk = True
 
                 format_msg = []
@@ -327,17 +345,18 @@ class Server:
                     format_msg = msg.content.lower().strip().split()
 
                 game.competing[0].set_action(format_msg)
-                if format_msg[0] == "raise":  
+                if format_msg[0] == "raise":
                     if not format_msg[1].isdigit():
                         await self.announcer_ui.value_not_digit(ctx, game.competing[0].user)
                         continue
-                        
-                    raise_round=int(format_msg[1])
-                    if(raise_round > (game.competing[0].game_balance - game.competing[0].in_pot)):
+
+                    raise_round = int(format_msg[1])
+                    if(raise_round > game.competing[0].game_balance - game.competing[0].in_pot):
 
                         await self.announcer_ui.above_balance(ctx, game.competing[0].user)
                         continue
-                    await self.announcer_ui.report_raise(ctx, game.competing[0].get_username(), format_msg[1]) 
+                    await self.announcer_ui.report_raise(ctx, game.competing[0].get_username(),
+                                                        format_msg[1])
                     has_raised = True
                     game.competing[0].in_pot += raise_round
                     game.current_pot += raise_round
@@ -346,7 +365,7 @@ class Server:
                     temp = game.competing.pop(0)
                     game.competing.append(temp)
                     i = 0
-                elif format_msg[0] == "call": 
+                elif format_msg[0] == "call":
                     await self.announcer_ui.report_call(ctx, game.competing[0].get_username())
                     game.current_pot += (raise_amt - game.competing[0].in_pot)
                     game.competing[0].in_pot = raise_amt
@@ -364,10 +383,10 @@ class Server:
                     if len(game.competing) == 1:
                         return
                 else:
-                    continue 
+                    continue
                 if called_action:
                     i += 1
-         
+
     async def turn(self, ctx, game):
         """
         This method reveals the fourth card in the community deck.
@@ -382,7 +401,7 @@ class Server:
             eval = EvaluateHand(comm_and_hand)
             x.win_condition = eval.evaluate()
             await x.user.send(x.get_win_cond())
-    
+
     async def river(self, ctx, game):
         """
         This method reveals the fifth card in the community deck.
@@ -397,7 +416,7 @@ class Server:
             eval = EvaluateHand(comm_and_hand)
             x.win_condition = eval.evaluate()
             await x.user.send(x.get_win_cond())
-    
+
     async def find_winner(self, ctx, game):
         """
         This method finds the winner out of all the players hand.
@@ -409,7 +428,9 @@ class Server:
             await self.announcer_ui.show_cards(ctx, x.hand)
         winners = game.find_winner()  # needs to return a list of winners
         for x in winners:
-            embed = discord.Embed(title="WINNER: "+x.username, description= x.get_win_cond(), color=discord.Color.green())
+            embed = discord.Embed(
+                title = "WINNER: " + x.username, 
+                description=x.get_win_cond(), color=discord.Color.green())
             embed.set_image(url=x.user.avatar_url)
             await ctx.send(embed=embed)
             x.game_balance += int(game.current_pot / len(winners))
@@ -427,7 +448,7 @@ class Server:
         await asyncio.sleep(10)
         await game.leave_game(ctx, self.players, True)
         await game.add_players(ctx, self.players)
-        if len(game.participants)<2:
+        if len(game.participants) < 2:
             for x in game.participants:
                 game.leave_queue.append(x)
             await ctx.send("Not enough players! Terminating game")
