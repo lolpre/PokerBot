@@ -215,7 +215,7 @@ class EvaluateHand:
             else:
                 break
         #Checks if Three of a kind and pair exists
-        if three_of_kind >=0 and two_of_kind >=0:       
+        if three_of_kind >= 0 and two_of_kind >= 0:       
             #Sets result to 7 to represent Full house 
             #and rank values of three and two of a kind.
             result = [7,three_of_kind,two_of_kind]        
