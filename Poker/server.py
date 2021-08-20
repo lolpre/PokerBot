@@ -88,8 +88,7 @@ class Server:
         **.join** - Join an already existing Poker game
         **(Mods Only) .reset** - Reset the balances of everyone in the server""",
                               color=0xffffff)
-        embed.set_thumbnail(url="https://s.wsj.net/public/resources/\
-                            images/JR-AA451_IFPOKE_GR_20191031164807.jpg")
+        embed.set_thumbnail(url="https://s.wsj.net/public/resources/images/JR-AA451_IFPOKE_GR_20191031164807.jpg")
         await ctx.send(embed=embed)
 
     async def print_leaderboard(self, ctx):
