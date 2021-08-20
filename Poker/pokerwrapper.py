@@ -4,10 +4,10 @@ PokerWrapper.
 import asyncio
 import math
 import discord
-from pokerplayer import PokerPlayer
-from deck import Deck
-from announcer import Announcer
-from evalhand import EvaluateHand
+from Poker.pokerplayer import PokerPlayer
+from Poker.deck import Deck
+from Poker.announcer import Announcer
+from Poker.evalhand import EvaluateHand
 
 
 class PokerWrapper:
