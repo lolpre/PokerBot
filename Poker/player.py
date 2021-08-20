@@ -12,7 +12,7 @@ class Player:
 		"""
 		self.id = id  # unique ID to identify the user
 		self.balance = balance  # current balance of the player
-		self.inGame = False   # check if player is in game
+		self.in_game = False   # check if player is in game
 
 	
 	def get_balance(self):
