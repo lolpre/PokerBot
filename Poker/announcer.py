@@ -198,7 +198,7 @@ class Announcer:
                               description="Balance: "+str(game.competing[0].get_game_balance()) +
                               " <:chips:865450470671646760>" +
                               """\nIn Pot: """ + str(game.competing[0].in_pot) +
-                              """ <:chips:865450470671646760> \nCurrent Pot: """ +
+                              """ <:chips:865450470671646760> \n\nCurrent Pot: """ +
                               str(game.current_pot), color=discord.Color.green())
         embed.set_thumbnail(url=game.competing[0].user.avatar_url)
         await ctx.send(embed=embed)
