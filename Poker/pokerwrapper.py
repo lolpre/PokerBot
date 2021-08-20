@@ -37,18 +37,23 @@ class PokerWrapper:
         self.leave_queue=[]  # list of players waiting to leave the game
         self.starting_balance = 0  # set initial balance of the game
 
-    # Internal bot function that waits for command to start the game.
+    
     async def start_game(self, ctx):
+        """Internal bot function that waits for command to start the game."""
+        
         await self.poker_ui.initiate_game(ctx)
         
-    # Starts the game and sets player with the embed as the message being sent.
+    
     async def set_players(self, ctx, bot, players):
+        """Starts the game and sets player with the embed as the message being sent."""
+        
         embed = discord.Embed(title="Poker: Texas hold 'em",
                               description="Starting Balance: "+str(self.starting_balance)+""" <:chips:865450470671646760>
         Min Bet: """+str(self.hard_blind)+""" <:chips:865450470671646760>
         \nReact to Join!""",
             color=discord.Color.green())
-        #the bot will wait until all responces or until time is up
+        
+        # The bot will wait until all responces or until time is up
         message = await ctx.send(embed=embed)
         await message.add_reaction('✅')
         await asyncio.sleep(10)
@@ -90,8 +95,10 @@ class PokerWrapper:
         else:
             await ctx.send("Starting game with " + str(len(self.participants)) + " players")
     
-    # Adds to players to the game from the list of players waiting to be added.
+    
     async def add_players(self, ctx, players):
+        """Adds to players to the game from the list of players waiting to be added."""
+        
         for new_player in self.join_queue:
             if len(self.participants) == 8:
                 continue
@@ -101,9 +108,13 @@ class PokerWrapper:
             self.join_queue.remove(new_player)
         
     
-    # Removes players based on the list of players ready to leave and 
-    # checks if game is still able to play.
+    
     async def leave_game(self, ctx, players, enough_players):
+        """
+        Removes players based on the list of players ready to 
+        leave and checks if game is still able to play.
+        """
+        
         for x in self.leave_queue:
             players[x.user.id].balance+= x.get_game_balance()-self.starting_balance
             players[x.user.id].in_game = False
@@ -115,9 +126,10 @@ class PokerWrapper:
             
         self.leave_queue.clear()
     
-    # Sets the blind at the start of the game and takes in input from users.
+    
     async def set_blind(self, ctx, bot):
-
+        """Sets the blind at the start of the game and takes in input from users."""
+        
         def represents_int(s):
             try:
                 int(s)
@@ -141,9 +153,10 @@ class PokerWrapper:
 
     
     
-    # This updates the players balance after the end of each round.
+    
     async def set_balance(self, ctx):
-
+        """This updates the players balance after the end of each round."""
+        
         def represents_int(s):
             try: 
                 int(s)
@@ -164,8 +177,10 @@ class PokerWrapper:
 
         self.starting_balance = int(msg.content)
 
-    # Deals cards to players and community card.
+    
     async def deal_cards(self, bot):
+        """Deals cards to players and community card."""
+        
         self.game_deck.shuffle()
 
         for p in self.participants:
@@ -174,35 +189,45 @@ class PokerWrapper:
                 p.add_card(c)
             await p.send_hand(bot)
     
-    # Check if the current players in the game have balance to continue playing.
+    
     def check_player_balance(self):
+        """Check if the current players in the game have balance to continue playing."""
+        
         for i in self.participants:
             if i.get_game_balance() <= 0:
                 self.participants.remove(i)
     
-    # Removes player from current rouhd with fold command.
     def player_fold(self, id):
+        """Removes player from current rouhd with fold command."""
+        
         self.competing.pop(0)
     
-    # Remove player from the current game.
+    
     def remove_player(self, id):
+        """Remove player from the current game."""
+        
         for i in self.participants:
             if i.username() == id:
                 self.participants.remove(i)
         self.num_players -= 1
     
-    # Makes community hand.
+    
     def create_comm_deck(self):
+        """Makes community hand."""
+        
         i = 0
         for i in range(3):
             self.add_card_to_comm()
     
-    # Adds card to community card
     def add_card_to_comm(self):
+        """Adds card to community card."""
+        
         self.community_deck.append(self.game_deck.draw_card())
     
-    # At the end of each round find the winner.
+    
     def find_winner(self):
+        """At the end of each round find the winner."""
+        
         eval = EvaluateHand(self.community_deck)
         for x in self.competing:
             command_hand = self.community_deck + x.hand
@@ -217,8 +242,10 @@ class PokerWrapper:
         winners = Eval.winning(compete, winning_cond)
         return winners
     
-    # Reset the round.
+    
     def reset_round(self):
+        """Reset the round."""
+        
         self.game_started = False
         self.current_pot = 0
         self.community_deck.clear()
