@@ -2,16 +2,17 @@ import random
 import discord
 import asyncio 
 
-######################################################
-# ANNOUNCER                                          #
-# The Announcer class is the interface of Poker Bot, # 
-# and the class that will be interacting with the    #
-# user the most. All the information stored inside   #
-# the other classes will be communicated through the #
-# Announcer class.                                   #
-######################################################
+
 class Announcer:
-   
+"""
+ ANNOUNCER                                          
+ The Announcer class is the interface of Poker Bot,  
+ and the class that will be interacting with the    
+ user the most. All the information stored inside   
+ the other classes will be communicated through the 
+ Announcer class.                                   
+"""
+
     async def initiate_game(self, ctx):
     """
     initiate_bet outputs the announcing message that begins the Poker Game.
