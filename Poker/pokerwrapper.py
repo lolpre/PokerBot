@@ -1,25 +1,18 @@
-from Poker.player import Player
 from Poker.pokerplayer import PokerPlayer
 from Poker.deck import Deck
-from Poker.card import Card
 from Poker.announcer import Announcer
 from Poker.evalhand import EvaluateHand
 import asyncio
 import discord
 import math
 
-'''
-
-This is the PokerWrapper class. This class object represents one instance of 
-a Poker game. It holds all the data for the game including the current players,
-the game balance, the ids, etc. Having each game represented with this class
-object allows for the PokerBot to host more than one game at a time.
-
-
-'''
-
-
 class PokerWrapper:
+    """
+    This is the PokerWrapper class. This class object represents one instance of 
+    a Poker game. It holds all the data for the game including the current players,
+    the game balance, the ids, etc. Having each game represented with this class
+    object allows for the PokerBot to host more than one game at a time.
+    """
     def __init__(self, bot):
         self.bot = bot  # this sets the bot in discord to run
         self.game_id = 0  # plan to have multiple games so this identifies running games
@@ -48,8 +41,8 @@ class PokerWrapper:
         """Starts the game and sets player with the embed as the message being sent."""
         
         embed = discord.Embed(title = "Poker: Texas hold 'em",
-                              description = "Starting Balance: "+str(self.starting_balance)+""" <:chips:865450470671646760>
-        Min Bet: """+str(self.hard_blind)+""" <:chips:865450470671646760>
+                              description = "Starting Balance: "+str(self.starting_balance) + """ <:chips:865450470671646760>
+        Min Bet: """ + str(self.hard_blind) + """ <:chips:865450470671646760>
         \nReact to Join!""",
             color = discord.Color.green())
         
@@ -143,13 +136,13 @@ class PokerWrapper:
         await self.poker_ui.ask_bet(ctx)
 
         try:
-            msg = await bot.wait_for('message', check=verify, timeout=30)
+            msg = await bot.wait_for('message', check = verify, timeout = 30)
         except asyncio.TimeoutError:
             await ctx.send(f"Sorry, you took too long to type the blind")
             return False
 
         self.hard_blind = int(msg.content)
-        self.small_blind = math.floor(self.hard_blind/2)
+        self.small_blind = math.floor(self.hard_blind / 2)
 
     
     
@@ -215,7 +208,6 @@ class PokerWrapper:
     def create_comm_deck(self):
         """Makes community hand."""
         
-        i = 0
         for i in range(3):
             self.add_card_to_comm()
     
@@ -231,15 +223,15 @@ class PokerWrapper:
         eval = EvaluateHand(self.community_deck)
         for x in self.competing:
             command_hand = self.community_deck + x.hand
-            Eval = EvaluateHand(command_hand)
-            x.win_condition = Eval.evaluate()
+            eval = EvaluateHand(command_hand)
+            x.win_condition = eval.evaluate()
 
         winning_cond = max(x.win_condition[0] for x in self.competing)
         compete = []
         for x in self.competing:
             if x.win_condition[0] == winning_cond:
                 compete.append(x)
-        winners = Eval.winning(compete, winning_cond)
+        winners = eval.winning(compete, winning_cond)
         return winners
     
     

@@ -1,12 +1,9 @@
-'''
-
-This is the Player class. This class object represents each user in the
-Discord server. This player object will be created each time a Discord
-user uses the ".create" command, regitering an account. 
-
-'''
 class Player:
-
+	"""
+	This is the Player class. This class object represents each user in the
+	Discord server. This player object will be created each time a Discord
+	user uses the ".create" command, regitering an account. 
+	"""
 	
 	def __init__(self, id, balance):
 		"""
