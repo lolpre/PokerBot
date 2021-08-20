@@ -371,260 +371,260 @@ class EvaluateHand:
 
         return result
 
-def winning(competing, win_cond):
-    """Finds the winner(s) of competing poker players with specific
-    tie breaker rules."""
-    winners = []
-    winners_2 = []
-    winners_3 = []
+    def winning(self, competing, win_cond):
+        """Finds the winner(s) of competing poker players with specific
+        tie breaker rules."""
+        winners = []
+        winners_2 = []
+        winners_3 = []
 
-    #If only one player has the highest win condition,
-    #then just return the player
-    if len(competing) == 1:
-        return competing
-    #Royal Flush
-    if win_cond == 10:
-        #Returns all competing players, as there are no tiebreakers
-        #for Royal Flush
-        return competing
+        #If only one player has the highest win condition,
+        #then just return the player
+        if len(competing) == 1:
+            return competing
+        #Royal Flush
+        if win_cond == 10:
+            #Returns all competing players, as there are no tiebreakers
+            #for Royal Flush
+            return competing
 
-    #Straight Flush
-    if win_cond == 9:
-        #Finds winner by higher card in straight flush
-        max_val = max(competitor.win_condition[1] for competitor in competing)
-        for competitor in competing:
-            if competitor.win_condition[1] == max_val:
-                winners.append(competitor)
-    #Four of a Kind
-    elif win_cond == 8:
-        if min(competitor.win_condition[1] for competitor in competing) == 0:
-            max_val = 0
-        else:
+        #Straight Flush
+        if win_cond == 9:
+            #Finds winner by higher card in straight flush
             max_val = max(competitor.win_condition[1] for competitor in competing)
-
-        #Finds winner by whoever has the higher four of a kind
-        for competitor in competing:
-            if competitor.win_condition[1] == max_val:
-                winners.append(competitor)
-        #If there's a tie for highest four of a kind, then checks for
-        #highest card outside.
-        if len(winners) > 1:
-            if min(competitor.win_condition[2] for competitor in winners) == 0:
-                max_val = 0
-            else:
-                max_val = max(competitor.win_condition[2] for competitor in winners)
-            for competitor in winners:
-                if competitor.win_condition[2] == max_val:
-                    winners_2.append(competitor)
-            return winners_2
-
-    #Full House
-    elif win_cond == 7:
-        if min(competitor.win_condition[1] for competitor in competing) == 0:
-            max_val = 0
-        else:
-            max_val = max(competitor.win_condition[1] for competitor in competing)
-
-        for competitor in competing:
-            #Finds winner by whoever has the higher three of a kind
-            if competitor.win_condition[1] == max_val:
-                winners.append(competitor)
-        #If there's a tie for highest three of a kind, then checks for
-        #highest pair
-        if len(winners) > 1:
-            if min(competitor.win_condition[2] for competitor in winners) == 0:
-                max_val = 0
-            else:
-                max_val = max(competitor.win_condition[2] for competitor in winners)
-            for competitor in winners:
-                if competitor.win_condition[2] == max_val:
-                    winners_2.append(competitor)
-            return winners_2
-    #Flush
-    elif win_cond == 6:
-        if min(competitor.win_condition[1] for competitor in competing) == 0:
-            max_val = 0
-        else:
-            max_val = max(competitor.win_condition[1] for competitor in competing)
-
-        #Finds winner by whoever has the cards in flush
-        for competitor in competing:
-            if competitor.win_condition[1] == max_val:
-                winners.append(competitor)
-        #If there's a tie for highest card, then it will check the next
-        #highest cards, continuously until the last card.
-        if len(winners) > 1:
-            max_val = max(competitor.win_condition[2] for competitor in winners)
-            for competitor in winners:
-                if competitor.win_condition[2] == max_val:
-                    winners_2.append(competitor)
-            if len(winners_2) == 1:
-                return winners_2
-
-            max_val = max(competitor.win_condition[3] for competitor in winners_2)
-            for competitor in winners_2:
-                if competitor.win_condition[3] == max_val:
-                    winners_3.append(competitor)
-            if len(winners_3) == 1:
-                return winners_3
-
-            winners.clear()
-            max_val = max(competitor.win_condition[4] for competitor in winners_3)
-            for competitor in winners_3:
-                if competitor.win_condition[4] == max_val:
+            for competitor in competing:
+                if competitor.win_condition[1] == max_val:
                     winners.append(competitor)
-            if len(winners) == 1:
-                return winners
-
-            winners_2.clear()
-            max_val = max(competitor.win_condition[5] for competitor in winners)
-            for competitor in winners:
-                if competitor.win_condition[5] == max_val:
-                    winners_2.append(competitor)
-            return winners_2
-    #Straight
-    elif win_cond == 5:
-        if min(competitor.win_condition[1] for competitor in competing) == 0:
-            max_val = 0
-        else:
-            max_val = max(competitor.win_condition[1] for competitor in competing)
-
-        #Finds winner by whoever has the higher straight
-        for competitor in competing:
-            if competitor.win_condition[1] == max_val:
-                winners.append(competitor)
-
-    #Three of a Kind
-    elif win_cond == 4:
-        if min(competitor.win_condition[1] for competitor in competing) == 0:
-            max_val = 0
-        else:
-            max_val = max(competitor.win_condition[1] for competitor in competing)
-
-        #Finds winner by whoever has the higher three of a kind
-        for competitor in competing:
-            if competitor.win_condition[1] == max_val:
-                winners.append(competitor)
-        #If there's a tie for highest three of a kind, checks remaining
-        #cards for higher ranks
-        if len(winners) > 1:
-            if min(competitor.win_condition[2] for competitor in winners) == 0:
+        #Four of a Kind
+        elif win_cond == 8:
+            if min(competitor.win_condition[1] for competitor in competing) == 0:
                 max_val = 0
             else:
+                max_val = max(competitor.win_condition[1] for competitor in competing)
+
+            #Finds winner by whoever has the higher four of a kind
+            for competitor in competing:
+                if competitor.win_condition[1] == max_val:
+                    winners.append(competitor)
+            #If there's a tie for highest four of a kind, then checks for
+            #highest card outside.
+            if len(winners) > 1:
+                if min(competitor.win_condition[2] for competitor in winners) == 0:
+                    max_val = 0
+                else:
+                    max_val = max(competitor.win_condition[2] for competitor in winners)
+                for competitor in winners:
+                    if competitor.win_condition[2] == max_val:
+                        winners_2.append(competitor)
+                return winners_2
+
+        #Full House
+        elif win_cond == 7:
+            if min(competitor.win_condition[1] for competitor in competing) == 0:
+                max_val = 0
+            else:
+                max_val = max(competitor.win_condition[1] for competitor in competing)
+
+            for competitor in competing:
+                #Finds winner by whoever has the higher three of a kind
+                if competitor.win_condition[1] == max_val:
+                    winners.append(competitor)
+            #If there's a tie for highest three of a kind, then checks for
+            #highest pair
+            if len(winners) > 1:
+                if min(competitor.win_condition[2] for competitor in winners) == 0:
+                    max_val = 0
+                else:
+                    max_val = max(competitor.win_condition[2] for competitor in winners)
+                for competitor in winners:
+                    if competitor.win_condition[2] == max_val:
+                        winners_2.append(competitor)
+                return winners_2
+        #Flush
+        elif win_cond == 6:
+            if min(competitor.win_condition[1] for competitor in competing) == 0:
+                max_val = 0
+            else:
+                max_val = max(competitor.win_condition[1] for competitor in competing)
+
+            #Finds winner by whoever has the cards in flush
+            for competitor in competing:
+                if competitor.win_condition[1] == max_val:
+                    winners.append(competitor)
+            #If there's a tie for highest card, then it will check the next
+            #highest cards, continuously until the last card.
+            if len(winners) > 1:
                 max_val = max(competitor.win_condition[2] for competitor in winners)
-            for competitor in winners:
-                if competitor.win_condition[2] == max_val:
-                    winners_2.append(competitor)
-            if len(winners_2) == 1:
-                return winners_2
-            max_val = max(competitor.win_condition[3] for competitor in winners_2)
-            for competitor in winners_2:
-                if competitor.win_condition[3] == max_val:
-                    winners_3.append(competitor)
-            return winners_3
-    #Two Pair
-    elif win_cond == 3:
-        if min(competitor.win_condition[1] for competitor in competing) == 0:
-            max_val = 0
-        else:
-            max_val = max(competitor.win_condition[1] for competitor in competing)
+                for competitor in winners:
+                    if competitor.win_condition[2] == max_val:
+                        winners_2.append(competitor)
+                if len(winners_2) == 1:
+                    return winners_2
 
-        #Finds winner by whoever has the higher first pair
-        for competitor in competing:
-            if competitor.win_condition[1] == max_val:
-                winners.append(competitor)
-        #If tied, finds winner by whoever has the higher second pair
-        if len(winners) > 1:
-            max_val = max(competitor.win_condition[2] for competitor in winners)
-            for competitor in winners:
-                if competitor.win_condition[2] == max_val:
-                    winners_2.append(competitor)
-            #If tied again, finds winner by whoever has the highest
-            # remaining card
-            if len(winners_2) == 1:
-                return winners_2
-            if min(competitor.win_condition[3] for competitor in winners_2) == 0:
-                max_val = 0
-            else:
                 max_val = max(competitor.win_condition[3] for competitor in winners_2)
-            for competitor in winners_2:
-                if competitor.win_condition[3] == max_val:
-                    winners_3.append(competitor)
-            return winners_3
-    #One Pair
-    elif win_cond == 2:
-        if min(competitor.win_condition[1] for competitor in competing) == 0:
-            max_val = 0
-        else:
-            max_val = max(competitor.win_condition[1] for competitor in competing)
+                for competitor in winners_2:
+                    if competitor.win_condition[3] == max_val:
+                        winners_3.append(competitor)
+                if len(winners_3) == 1:
+                    return winners_3
 
-        #Finds winner by whoever has the higher pair
-        for competitor in competing:
-            if competitor.win_condition[1] == max_val:
-                winners.append(competitor)
-        #If there's a tie for highest pair, then it will check the next
-        # highest cards, continuously until the last card.
-        if len(winners) > 1:
-            if min(competitor.win_condition[2] for competitor in winners) == 0:
+                winners.clear()
+                max_val = max(competitor.win_condition[4] for competitor in winners_3)
+                for competitor in winners_3:
+                    if competitor.win_condition[4] == max_val:
+                        winners.append(competitor)
+                if len(winners) == 1:
+                    return winners
+
+                winners_2.clear()
+                max_val = max(competitor.win_condition[5] for competitor in winners)
+                for competitor in winners:
+                    if competitor.win_condition[5] == max_val:
+                        winners_2.append(competitor)
+                return winners_2
+        #Straight
+        elif win_cond == 5:
+            if min(competitor.win_condition[1] for competitor in competing) == 0:
                 max_val = 0
             else:
+                max_val = max(competitor.win_condition[1] for competitor in competing)
+
+            #Finds winner by whoever has the higher straight
+            for competitor in competing:
+                if competitor.win_condition[1] == max_val:
+                    winners.append(competitor)
+
+        #Three of a Kind
+        elif win_cond == 4:
+            if min(competitor.win_condition[1] for competitor in competing) == 0:
+                max_val = 0
+            else:
+                max_val = max(competitor.win_condition[1] for competitor in competing)
+
+            #Finds winner by whoever has the higher three of a kind
+            for competitor in competing:
+                if competitor.win_condition[1] == max_val:
+                    winners.append(competitor)
+            #If there's a tie for highest three of a kind, checks remaining
+            #cards for higher ranks
+            if len(winners) > 1:
+                if min(competitor.win_condition[2] for competitor in winners) == 0:
+                    max_val = 0
+                else:
+                    max_val = max(competitor.win_condition[2] for competitor in winners)
+                for competitor in winners:
+                    if competitor.win_condition[2] == max_val:
+                        winners_2.append(competitor)
+                if len(winners_2) == 1:
+                    return winners_2
+                max_val = max(competitor.win_condition[3] for competitor in winners_2)
+                for competitor in winners_2:
+                    if competitor.win_condition[3] == max_val:
+                        winners_3.append(competitor)
+                return winners_3
+        #Two Pair
+        elif win_cond == 3:
+            if min(competitor.win_condition[1] for competitor in competing) == 0:
+                max_val = 0
+            else:
+                max_val = max(competitor.win_condition[1] for competitor in competing)
+
+            #Finds winner by whoever has the higher first pair
+            for competitor in competing:
+                if competitor.win_condition[1] == max_val:
+                    winners.append(competitor)
+            #If tied, finds winner by whoever has the higher second pair
+            if len(winners) > 1:
                 max_val = max(competitor.win_condition[2] for competitor in winners)
-            for competitor in winners:
-                if competitor.win_condition[2] == max_val:
-                    winners_2.append(competitor)
-            if len(winners_2) == 1:
-                return winners_2
-
-            max_val = max(competitor.win_condition[3] for competitor in winners_2)
-            for competitor in winners_2:
-                if competitor.win_condition[3] == max_val:
-                    winners_3.append(competitor)
-            if len(winners_3) == 1:
+                for competitor in winners:
+                    if competitor.win_condition[2] == max_val:
+                        winners_2.append(competitor)
+                #If tied again, finds winner by whoever has the highest
+                # remaining card
+                if len(winners_2) == 1:
+                    return winners_2
+                if min(competitor.win_condition[3] for competitor in winners_2) == 0:
+                    max_val = 0
+                else:
+                    max_val = max(competitor.win_condition[3] for competitor in winners_2)
+                for competitor in winners_2:
+                    if competitor.win_condition[3] == max_val:
+                        winners_3.append(competitor)
                 return winners_3
+        #One Pair
+        elif win_cond == 2:
+            if min(competitor.win_condition[1] for competitor in competing) == 0:
+                max_val = 0
+            else:
+                max_val = max(competitor.win_condition[1] for competitor in competing)
 
-            winners.clear()
-            max_val = max(competitor.win_condition[4] for competitor in winners_3)
-            for competitor in winners_3:
-                if competitor.win_condition[4] == max_val:
+            #Finds winner by whoever has the higher pair
+            for competitor in competing:
+                if competitor.win_condition[1] == max_val:
                     winners.append(competitor)
-    #High Card
-    elif win_cond == 1:
-        if min(competitor.win_condition[1] for competitor in competing) == 0:
-            max_val = 0
-        else:
-            max_val = max(competitor.win_condition[1] for competitor in competing)
+            #If there's a tie for highest pair, then it will check the next
+            # highest cards, continuously until the last card.
+            if len(winners) > 1:
+                if min(competitor.win_condition[2] for competitor in winners) == 0:
+                    max_val = 0
+                else:
+                    max_val = max(competitor.win_condition[2] for competitor in winners)
+                for competitor in winners:
+                    if competitor.win_condition[2] == max_val:
+                        winners_2.append(competitor)
+                if len(winners_2) == 1:
+                    return winners_2
 
-        #Finds winner by whoever has the highest card, if tied continuously
-        # check the next highest card
-        for competitor in competing:
-            if competitor.win_condition[1] == max_val:
-                winners.append(competitor)
+                max_val = max(competitor.win_condition[3] for competitor in winners_2)
+                for competitor in winners_2:
+                    if competitor.win_condition[3] == max_val:
+                        winners_3.append(competitor)
+                if len(winners_3) == 1:
+                    return winners_3
 
-        if len(winners) > 1:
-            max_val = max(competitor.win_condition[2] for competitor in winners)
-            for competitor in winners:
-                if competitor.win_condition[2] == max_val:
-                    winners_2.append(competitor)
-            if len(winners_2) == 1:
+                winners.clear()
+                max_val = max(competitor.win_condition[4] for competitor in winners_3)
+                for competitor in winners_3:
+                    if competitor.win_condition[4] == max_val:
+                        winners.append(competitor)
+        #High Card
+        elif win_cond == 1:
+            if min(competitor.win_condition[1] for competitor in competing) == 0:
+                max_val = 0
+            else:
+                max_val = max(competitor.win_condition[1] for competitor in competing)
+
+            #Finds winner by whoever has the highest card, if tied continuously
+            # check the next highest card
+            for competitor in competing:
+                if competitor.win_condition[1] == max_val:
+                    winners.append(competitor)
+
+            if len(winners) > 1:
+                max_val = max(competitor.win_condition[2] for competitor in winners)
+                for competitor in winners:
+                    if competitor.win_condition[2] == max_val:
+                        winners_2.append(competitor)
+                if len(winners_2) == 1:
+                    return winners_2
+
+                max_val = max(competitor.win_condition[3] for competitor in winners_2)
+                for competitor in winners_2:
+                    if competitor.win_condition[3] == max_val:
+                        winners_3.append(competitor)
+                if len(winners_3) == 1:
+                    return winners_3
+                winners.clear()
+                max_val = max(competitor.win_condition[4] for competitor in winners_3)
+                for competitor in winners_3:
+                    if competitor.win_condition[4] == max_val:
+                        winners.append(competitor)
+                if len(winners) == 1:
+                    return winners
+                winners_2.clear()
+                max_val = max(competitor.win_condition[5] for competitor in winners)
+                for competitor in winners:
+                    if competitor.win_condition[5] == max_val:
+                        winners_2.append(competitor)
                 return winners_2
-
-            max_val = max(competitor.win_condition[3] for competitor in winners_2)
-            for competitor in winners_2:
-                if competitor.win_condition[3] == max_val:
-                    winners_3.append(competitor)
-            if len(winners_3) == 1:
-                return winners_3
-            winners.clear()
-            max_val = max(competitor.win_condition[4] for competitor in winners_3)
-            for competitor in winners_3:
-                if competitor.win_condition[4] == max_val:
-                    winners.append(competitor)
-            if len(winners) == 1:
-                return winners
-            winners_2.clear()
-            max_val = max(competitor.win_condition[5] for competitor in winners)
-            for competitor in winners:
-                if competitor.win_condition[5] == max_val:
-                    winners_2.append(competitor)
-            return winners_2
-    return winners
+        return winners
