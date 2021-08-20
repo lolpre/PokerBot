@@ -40,7 +40,7 @@ class Announcer:
                                 at the beginning of list
         output: none
         """
-        winner = sorted_players[0].username()
+        winner = sorted_players[0].get_username()
         self.show_comm_cards(com_deck)
         await ctx.send(winner + " has won, receiving " + str(current_pot))
    
@@ -168,7 +168,7 @@ class Announcer:
         """
         await ctx.send("CURRENT BALANCES:")
         for player in pkr_players:
-            await ctx.send(player.username() + ": " + str(player.get_game_balance()) + " <:chips:865450470671646760>")
+            await ctx.send(player.get_username() + ": " + str(player.get_game_balance()) + " <:chips:865450470671646760>")
     
 
     async def show_player(self, ctx, game):
@@ -177,11 +177,11 @@ class Announcer:
         input: ctx -> a class object. part of Discord API, the context of the message
                 game -> a PokerWrapper object. the current game information 
         """
-        embed = discord.Embed(title=game.competing[0].username(), 
+        embed = discord.Embed(title=game.competing[0].get_username(), 
         description="Balance: "+str(game.competing[0].get_game_balance())+" <:chips:865450470671646760>" + """
-        In Pot: """ + str(game.competing[0].inPot)+""" <:chips:865450470671646760>
+        In Pot: """ + str(game.competing[0].in_pot)+""" <:chips:865450470671646760>
         
-        Current Pot: """+ str(game.currentPot),
+        Current Pot: """+ str(game.current_pot),
         color=discord.Color.green())
         embed.set_thumbnail(url=game.competing[0].user.avatar_url)
         await ctx.send(embed=embed)

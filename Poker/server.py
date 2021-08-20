@@ -106,7 +106,7 @@ class Server:
     async def validate_game(self, ctx): 
         """This method checks if in game in channel is in progress."""
         if ctx.message.channel.id in self.games:
-            await self.announcer_ui.gameAlreadyInProgress(ctx)
+            await self.announcer_ui.game_already_in_progress(ctx)
             return False
         return True
 
@@ -116,7 +116,7 @@ class Server:
         input: ctx -> a class object. part of Discord API, the context of the message.
         """
         if ctx.author.id not in self.players:
-            await self.announcer_ui.noAccount(ctx, ctx.author)
+            await self.announcer_ui.no_account(ctx, ctx.author)
             return False
         if self.players[ctx.author.id].in_game:
             await self.announcer_ui.player_already_in_game(ctx, ctx.author)
@@ -209,7 +209,7 @@ class Server:
                 return
 
         if id in self.games:
-            self.games[id].join_queue.append(PokerPlayer(ctx.message.author.name, 0, ctx.message.author, self.games[id].startingBalance))
+            self.games[id].join_queue.append(PokerPlayer(ctx.message.author.name, 0, ctx.message.author, self.games[id].starting_balance))
             await self.announcer_ui.added_to_join_queue(ctx, ctx.author)
         else:
             await self.announcer_ui.no_game(ctx)
@@ -235,7 +235,7 @@ class Server:
         await self.river(ctx, game)
         if len(game.competing) != 1:
             await self.next_turns(ctx, game, bot)
-            await game.pokerUI.show_comm_cards(ctx, game.community_deck)
+            await game.poker_ui.show_comm_cards(ctx, game.community_deck)
 
     async def flop(self, ctx, game):
         """
@@ -261,14 +261,14 @@ class Server:
         """
         await self.announcer_ui.show_player(ctx,game)
         game.competing[0].in_pot = game.small_blind
-        await ctx.send(game.competing[0].username() + "\nSmall Blind: " + str(game.small_blind)+" <:chips:865450470671646760>\n")
+        await ctx.send(game.competing[0].get_username() + "\nSmall Blind: " + str(game.small_blind)+" <:chips:865450470671646760>\n")
         game.current_pot += game.competing[0].in_pot
         temp = game.competing.pop(0)
         game.competing.append(temp)
 
         await self.announcer_ui.show_player(ctx,game)
         game.competing[0].in_pot=game.hard_blind
-        await ctx.send(game.competing[0].username() + "\nBig Blind: " + str(game.hard_blind)+" <:chips:865450470671646760>\n")
+        await ctx.send(game.competing[0].get_username() + "\nBig Blind: " + str(game.hard_blind)+" <:chips:865450470671646760>\n")
         game.competing[0].set_action("blind")
         game.current_pot+=game.competing[0].in_pot
 
@@ -304,8 +304,8 @@ class Server:
                     continue
                 if game.competing[0].get_action() == "called blind":
                     blind = False
-                await self.announcer_ui.show_player(ctx,game)
-                await self.announcer_ui.ask_move(ctx, "<@"+str(game.competing[0].user.id)+">", has_raised, blind, bot)
+                await self.announcer_ui.show_player(ctx, game)
+                await self.announcer_ui.ask_move(ctx, "<@"+str(game.competing[0].user.id)+">", has_raised, blind)
                 
                 def verify(m):
                     return game.competing[0].user == m.author
@@ -333,11 +333,11 @@ class Server:
                         continue
                         
                     raise_round=int(format_msg[1])
-                    if(raise_round > (game.competing[0].game_balance-game.competing[0].in_pot)):
+                    if(raise_round > (game.competing[0].game_balance - game.competing[0].in_pot)):
 
                         await self.announcer_ui.above_balance(ctx, game.competing[0].user)
                         continue
-                    await self.announcer_ui.reportRaise(ctx, game.competing[0].username(), format_msg[1]) 
+                    await self.announcer_ui.report_raise(ctx, game.competing[0].get_username(), format_msg[1]) 
                     has_raised = True
                     game.competing[0].in_pot += raise_round
                     game.current_pot += raise_round
@@ -347,19 +347,19 @@ class Server:
                     game.competing.append(temp)
                     i = 0
                 elif format_msg[0] == "call": 
-                    await self.announcer_ui.report_call(ctx, game.competing[0].username())
-                    game.current_pot += (raise_amt-game.competing[0].in_pot)
+                    await self.announcer_ui.report_call(ctx, game.competing[0].get_username())
+                    game.current_pot += (raise_amt - game.competing[0].in_pot)
                     game.competing[0].in_pot = raise_amt
                     temp = game.competing.pop(0)
                     game.competing.append(temp)
                     called_action = True
                 elif format_msg[0] == "check":
-                    await self.announcer_ui.report_check(ctx, game.competing[0].username())
+                    await self.announcer_ui.report_check(ctx, game.competing[0].get_username())
                     temp = game.competing.pop(0)
                     game.competing.append(temp)
                     called_action = True
                 elif format_msg[0] == "fold":
-                    await self.announcer_ui.report_fold(ctx, game.competing[0].username())
+                    await self.announcer_ui.report_fold(ctx, game.competing[0].get_username())
                     game.competing.pop(0)
                     if len(game.competing) == 1:
                         return
@@ -376,7 +376,7 @@ class Server:
         """
         game.add_card_to_comm()
         comm_deck = game.community_deck
-        await game.pokerUI.show_comm_cards(ctx, comm_deck)
+        await game.poker_ui.show_comm_cards(ctx, comm_deck)
         for x in game.participants:
             comm_and_hand = comm_deck + x.hand
             eval = EvaluateHand(comm_and_hand)
@@ -391,7 +391,7 @@ class Server:
         """
         game.add_card_to_comm()
         comm_deck = game.community_deck
-        await game.pokerUI.show_comm_cards(ctx, comm_deck)
+        await game.poker_ui.show_comm_cards(ctx, comm_deck)
         for x in game.participants:
             comm_and_hand = comm_deck + x.hand
             eval = EvaluateHand(comm_and_hand)
@@ -405,7 +405,7 @@ class Server:
                game -> a PokerWrapper object, holds the game information 
         """
         for x in game.competing:
-            await ctx.send("**"+x.username()+"'s Hand:**")
+            await ctx.send("**"+x.get_username()+"'s Hand:**")
             await self.announcer_ui.show_cards(ctx, x.hand)
         winners = game.find_winner()  # needs to return a list of winners
         for x in winners:

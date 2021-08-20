@@ -200,7 +200,7 @@ class PokerWrapper:
         """Remove player from the current game."""
         
         for i in self.participants:
-            if i.username() == id:
+            if i.get_username() == id:
                 self.participants.remove(i)
         self.num_players -= 1
     
