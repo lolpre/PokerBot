@@ -4,7 +4,7 @@ from Poker.pokerplayer import PokerPlayer
 
 
 class EvaluateHand:
-    '''
+    """
     EvaluateHand
 
     This is the EvaluateHand class. This class's sole purpose is to
@@ -12,7 +12,7 @@ class EvaluateHand:
     what is the best combination for the hand. Such combinations are
     a Royal Flush, Two Pair, Straight Flush, Four of a Kind, etc.
 
-    '''
+    """
 
     def __init__(self, hand):
         """Constructor to Evaluate Hand. Sets hand to all_cards List."""
