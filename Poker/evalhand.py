@@ -11,518 +11,632 @@ a Royal Flush, Two Pair, Straight Flush, Four of a Kind, etc.
 '''
 
 class EvaluateHand:
-    #Constructor to Evaluate Hand. Sets hand to allCards List
-    def __init__(self, hand):
-        self.allCards= hand
-        # print(self.allCards)
     
-    #Prints the cards in allCards
-    def printHand(self):
-        for x in self.allCards:
+    def __init__(self, hand):
+        """Constructor to Evaluate Hand. Sets hand to all_cards List."""
+        self.all_cards= hand
+    
+    def print_hand(self):
+        """Prints the cards in all_cards."""
+        for x in self.all_cards:
             print(str(x.val) +str(x.suit) )
 
-    #Adds card to allCards List
-    def addCard(self, card):
-        self.allCards.append(card)
+    def add_card(self, card):
+        """Adds card to all_cards List."""
+        self.all_cards.append(card)
 
-    #Returns the amount of cards in allCards
-    def numCards(self):
+    def num_cards(self):
+        """Returns the amount of cards in all_cards."""
         return len(self.hand)
 
-    #Sorts the allCards list by card rank
-    def sortByRank(self):
-        self.allCards.sort(key=lambda x:x.getNumVal())
+    def sort_by_rank(self):
+        """Sorts the all_cards list by card rank."""
+        self.all_cards.sort(key=lambda x:x.get_num_val())
     
-    #Sorts the allCards list by card suit
-    def sortBySuit(self):
-        self.allCards.sort(key=lambda x:x.getNumSuit())
+    def sort_by_suit(self):
+        """Sorts the all_cards list by card suit."""
+        self.all_cards.sort(key=lambda x:x.get_num_suit())
     
-    #Sorts the allCards list by card suit then by card rank
-    def sortBySuitThenRank(self):
-        self.allCards.sort(key=lambda x:x.getNumSuit())
-        self.allCards.sort(key=lambda x:x.getNumVal())
+    def sort_by_suit_then_rank(self):
+        """Sorts the all_cards list by card suit then by card rank."""
+        self.all_cards.sort(key=lambda x:x.get_num_suit())
+        self.all_cards.sort(key=lambda x:x.get_num_val())
 
-    #Sorts the allCards list by card rank then by card suit
-    def sortByRankThenSuit(self):
-        self.allCards.sort(key=lambda x:x.getNumVal())
-        self.allCards.sort(key=lambda x:x.getNumSuit())
+    def sort_by_rank_then_suit(self):
+        """Sorts the all_cards list by card rank then by card suit."""
+        self.all_cards.sort(key=lambda x:x.get_num_val())
+        self.all_cards.sort(key=lambda x:x.get_num_suit())
 
-    #Evaluates allCards to find all its possible winning conditions
     def evaluate(self):
-        #Count the ranks and suits in allCards
-        rankCounter = {}
-        suitCounter = {}
+        """Evaluates all_cards to find all its possible winning conditions."""
+
+        #Count the ranks and suits in all_cards
+        rank_counter = {}
+        suit_counter = {}
 
         for x in range(13):
-            rankCounter[x]=[]
+            rank_counter[x]=[]
 
         for x in range(4):
-            suitCounter[x]=[]
+            suit_counter[x]=[]
 
-        for x in self.allCards:
-            rankCounter[x.getNumVal()].append(x)
-            suitCounter[x.getNumSuit()].append(x)
+        for x in self.all_cards:
+            rank_counter[x.get_num_val()].append(x)
+            suit_counter[x.get_num_suit()].append(x)
 
-        self.sortByRankThenSuit()
+        self.sort_by_rank_then_suit()
 
-        handResult=[]
-        handResult=self.evaluateRoyal(rankCounter,suitCounter)      #Evaluate if hand has Royal Flush
+        hand_result=[]
+        #Evaluate if hand has Royal Flush
+        hand_result=self.evaluate_royal(rank_counter,suit_counter)      
 
-        if len(handResult)==0:
-            handResult=self.evaluateStraightFlush(suitCounter)      #Evaluate if hand has Straight Flush
+        #Evaluate if hand has Straight Flush
+        if len(hand_result)==0:
+            hand_result=self.evaluate_straight_flush(suit_counter)      
     
-        if len(handResult)==0:
-            handResult=self.evaluateFourOfAKind(rankCounter)        #Evaluate if hand has Four of a Kind
-
-        if len(handResult)==0:
-            handResult=self.evaluateFullHouse(rankCounter)          #Evaluate if hand has Full House 
-
-        if len(handResult)==0:
-            handResult=self.evaluateFlush(suitCounter)              #Evaluate if hand has Flush
-
-        if len(handResult)==0:
-            handResult=self.evaluateStraight(rankCounter)           #Evaluate if hand has Straight
-
-        if len(handResult)==0:
-            handResult=self.evaluateThreeOfAKind(rankCounter)       #Evaluate if hand has Three of a Kind
-
-        if len(handResult)==0:
-            handResult=self.evaluateTwoPair(rankCounter)            #Evaluate if hand has Two Pair
-
-        if len(handResult)==0:
-            handResult=self.evaluateOnePair(rankCounter)            #Evaluate if hand has One Pair
-
-        if len(handResult)==0:
-            handResult=self.evaluateHighCard(rankCounter)           #Evaluate if hand's High Card
+        #Evaluate if hand has Four of a Kind
+        if len(hand_result)==0:
+            hand_result=self.evaluate_four_of_a_kind(rank_counter)        
         
-        return handResult                                           #Returns result of evaluated hand
+        #Evaluate if hand has Full House
+        if len(hand_result)==0:
+            hand_result=self.evaluate_full_house(rank_counter)           
+
+        #Evaluate if hand has Flush
+        if len(hand_result)==0:
+            hand_result=self.evaluate_flush(suit_counter)              
+
+        #Evaluate if hand has Straight
+        if len(hand_result)==0:
+            hand_result=self.evaluate_straight(rank_counter)           
+
+        #Evaluate if hand has Three of a Kind
+        if len(hand_result)==0:
+            hand_result=self.evaluate_three_of_a_kind(rank_counter)       
+        
+        #Evaluate if hand has Two Pair
+        if len(hand_result)==0:
+            hand_result=self.evaluate_two_pair(rank_counter)            
+
+        #Evaluate if hand has One Pair
+        if len(hand_result)==0:
+            hand_result=self.evaluate_one_pair(rank_counter)            
+
+        #Evaluate if hand's High Card
+        if len(hand_result)==0:
+            hand_result=self.evaluate_high_card(rank_counter)           
+        
+        #Returns result of evaluated hand
+        return hand_result            
     
-    #Evaluate if hand has Royal Flush
-    def evaluateRoyal(self, rankCounter, suitCounter):
+    def evaluate_royal(self, rank_counter, suit_counter):
+        """Evaluate if hand has Royal Flush."""
+
         result=[]
-        if ((len(rankCounter[9])>=1 and len(rankCounter[10])>=1 and         #Checks if hand has 10, J, Q, K, A
-            len(rankCounter[11])>=1 and len(rankCounter[12])>=1 and
-            len(rankCounter[0])>=1)
-            and 
-            (len(suitCounter[0])>4 or len(suitCounter[1])>4 or              #Checks for flush
-            len(suitCounter[2])>4 or len(suitCounter[3])>4)):
-            for i in range(3):                                              #Finds where in hand has Royal Flush
-                if (self.allCards[i].getNumVal()==0):
+        #Checks if hand has 10, J, Q, K, A
+        if ((len(rank_counter[9])>=1 and len(rank_counter[10])>=1 and         
+            len(rank_counter[11])>=1 and len(rank_counter[12])>=1 and
+            len(rank_counter[0])>=1)
+            and #Checks for flush
+            (len(suit_counter[0])>4 or len(suit_counter[1])>4 or              
+            len(suit_counter[2])>4 or len(suit_counter[3])>4)):
+            #Finds where in hand has Royal Flush
+            for i in range(3):
+                if (self.all_cards[i].get_num_val()==0):
                     for j in range(1,4-i):
-                        if (self.allCards[i+j].getNumVal()==9 and self.allCards[i+j+1].getNumVal()==10 and  
-                            self.allCards[i+j+2].getNumVal()==11 and self.allCards[i+j+3].getNumVal()==12
+                        if (self.all_cards[i+j].get_num_val()==9 and 
+                            self.all_cards[i+j+1].get_num_val()==10 and  
+                            self.all_cards[i+j+2].get_num_val()==11 and 
+                            self.all_cards[i+j+3].get_num_val()==12
                             and
-                            self.allCards[i].getNumSuit() == self.allCards[i+j].getNumSuit() and
-                            self.allCards[i].getNumSuit() == self.allCards[i+j+1].getNumSuit() and
-                            self.allCards[i].getNumSuit() == self.allCards[i+j+2].getNumSuit() and
-                            self.allCards[i].getNumSuit() == self.allCards[i+j+3].getNumSuit()):
-                            result=[10]                                     #Sets result to 10 to represent Royal Flush
+                            self.all_cards[i].get_num_suit() == 
+                            self.all_cards[i+j].get_num_suit() and
+                            self.all_cards[i].get_num_suit() == 
+                            self.all_cards[i+j+1].get_num_suit() and
+                            self.all_cards[i].get_num_suit() == 
+                            self.all_cards[i+j+2].get_num_suit() and
+                            self.all_cards[i].get_num_suit() == 
+                            self.all_cards[i+j+3].get_num_suit()):
+                            #Sets result to 10 to represent Royal Flush
+                            result=[10]                                     
                             break
         return result
 
-    #Evaluate if hand has Straight Flush
-    def evaluateStraightFlush(self, suitCounter):
+    
+    def evaluate_straight_flush(self, suit_counter):
+        """Evaluate if hand has Straight Flush."""
+
         result=[]
-        if (len(suitCounter[0])>4 or len(suitCounter[1])>4 or               #Checks for Flush
-            len(suitCounter[2])>4 or len(suitCounter[3])>4):
-            for i in range(len(self.allCards)-1, 3, -1):                    #Checks for Straight
-                if ((self.allCards[i].getNumVal()-1 == self.allCards[i-1].getNumVal() and   
-                    self.allCards[i].getNumVal()-2 == self.allCards[i-2].getNumVal() and
-                    self.allCards[i].getNumVal()-3 == self.allCards[i-3].getNumVal() and
-                    self.allCards[i].getNumVal()-4 == self.allCards[i-4].getNumVal())
+        #Checks for Flush
+        if (len(suit_counter[0])>4 or len(suit_counter[1])>4 or               
+            len(suit_counter[2])>4 or len(suit_counter[3])>4):
+            #Checks for Straight
+            for i in range(len(self.all_cards)-1, 3, -1):                    
+                if ((self.all_cards[i].get_num_val()-1 == 
+                    self.all_cards[i-1].get_num_val() and   
+                    self.all_cards[i].get_num_val()-2 == 
+                    self.all_cards[i-2].get_num_val() and
+                    self.all_cards[i].get_num_val()-3 == 
+                    self.all_cards[i-3].get_num_val() and
+                    self.all_cards[i].get_num_val()-4 == 
+                    self.all_cards[i-4].get_num_val())
                     and
-                    (self.allCards[i].getNumSuit() == self.allCards[i-1].getNumSuit() and
-                    self.allCards[i].getNumSuit() == self.allCards[i-2].getNumSuit() and
-                    self.allCards[i].getNumSuit() == self.allCards[i-3].getNumSuit() and
-                    self.allCards[i].getNumSuit() == self.allCards[i-4].getNumSuit())):
-                    result=[9,self.allCards[i].getNumVal()]                 #Sets result to 9 to represent Straight Flush and highest card rank in straight
+                    (self.all_cards[i].get_num_suit() == 
+                    self.all_cards[i-1].get_num_suit() and
+                    self.all_cards[i].get_num_suit() == 
+                    self.all_cards[i-2].get_num_suit() and
+                    self.all_cards[i].get_num_suit() == 
+                    self.all_cards[i-3].get_num_suit() and
+                    self.all_cards[i].get_num_suit() == 
+                    self.all_cards[i-4].get_num_suit())):
+                    #Sets result to 9 to represent Straight Flush and 
+                    # highest card rank in straight
+                    result=[9,self.all_cards[i].get_num_val()]                 
         return result
 
-    #Evaluate if hand has Four of a Kind
-    def evaluateFourOfAKind(self, rankCounter):
+    def evaluate_four_of_a_kind(self, rank_counter):
+        """Evaluate if hand has Four of a Kind."""
+
         result=[]
-        for i in range(13):                             #Checks for Four of a Kind
-            if len(rankCounter[i])==4:
-                result=[8,i]                            #Sets result to 8 to represent Four of a Kind and the rank value
-                if len(rankCounter[0])>0 and i!=0:      #Adds Ace rank to result if highest card outside four of a kind
+        #Checks for Four of a Kind
+        for i in range(13):                             
+            if len(rank_counter[i])==4:
+                #Sets result to 8 to represent Four of a Kind 
+                #and the rank value
+                result=[8,i]
+                #Adds Ace rank to result if highest 
+                # card outside four of a kind                            
+                if len(rank_counter[0])>0 and i!=0:      
                     result.append(0)
                     break
-                for j in range(len(rankCounter),0,-1):  #Adds card rank outside four of a kind to result 
-                    if len(rankCounter[j-1])>0 and j!=i:
+                #Adds card rank outside four of a kind to result 
+                for j in range(len(rank_counter),0,-1):  
+                    if len(rank_counter[j-1])>0 and j!=i:
                         result.append(j)
                         break
                 break
         return result        
 
-    #Evaluate if hand has Full House
-    def evaluateFullHouse(self, rankCounter):
-        result=[]
-        threeOfKind=-1
-        twoOfKind=-1
+    def evaluate_full_house(self, rank_counter):
+        """Evaluate if hand has Full House."""
 
-        for i in range(len(rankCounter), 0, -1):    #Checks for Three of a kind and two of a kind
-            if threeOfKind<0 or twoOfKind<0:
-                if len(rankCounter[i-1])>2:
-                    threeOfKind=i-1
-                elif len(rankCounter[i-1])>1:
-                    twoOfKind=i-1
+        result=[]
+        three_of_kind=-1
+        two_of_kind=-1
+        #Checks for Three of a kind and two of a kind
+        for i in range(len(rank_counter), 0, -1):    
+            if three_of_kind<0 or two_of_kind<0:
+                if len(rank_counter[i-1])>2:
+                    three_of_kind=i-1
+                elif len(rank_counter[i-1])>1:
+                    two_of_kind=i-1
             else:
                 break
-        if threeOfKind >=0 and twoOfKind >=0:       #Checks if Three of a kind and pair exists
-            result=[7,threeOfKind,twoOfKind]        #Sets result to 7 to represent Full house and rank values of three and two of a kind.
+        #Checks if Three of a kind and pair exists
+        if three_of_kind >=0 and two_of_kind >=0:       
+            #Sets result to 7 to represent Full house 
+            #and rank values of three and two of a kind.
+            result=[7,three_of_kind,two_of_kind]        
             
         return result     
 
-    #Evaluate if hand has Flush
-    def evaluateFlush(self, suitCounter):
-        result=[]
+    def evaluate_flush(self, suit_counter):
+        """Evaluate if hand has Flush."""
 
-        if (len(suitCounter[0])>4 or len(suitCounter[1])>4 or       #Checks if hand has flush
-            len(suitCounter[2])>4 or len(suitCounter[3])>4):
-            for i in range(len(self.allCards)-1, 3, -1):
-                if (self.allCards[i].getNumSuit() == self.allCards[i-1].getNumSuit() and
-                    self.allCards[i].getNumSuit() == self.allCards[i-2].getNumSuit() and
-                    self.allCards[i].getNumSuit() == self.allCards[i-3].getNumSuit() and
-                    self.allCards[i].getNumSuit() == self.allCards[i-4].getNumSuit()):
-                    result=[6, self.allCards[i].getNumVal(),self.allCards[i-1].getNumVal(),                                 #Sets result to 6 to represent Flush and all card ranks
-                        self.allCards[i-2].getNumVal(),self.allCards[i-3].getNumVal() ,self.allCards[i-4].getNumVal()]      #inside the flush
-                    if self.allCards[i-4].getNumVal()==0:
+        result=[]
+        #Checks if hand has flush
+        if (len(suit_counter[0])>4 or len(suit_counter[1])>4 or       
+            len(suit_counter[2])>4 or len(suit_counter[3])>4):
+            for i in range(len(self.all_cards)-1, 3, -1):
+                if (self.all_cards[i].get_num_suit() == 
+                    self.all_cards[i-1].get_num_suit() and
+                    self.all_cards[i].get_num_suit() == 
+                    self.all_cards[i-2].get_num_suit() and
+                    self.all_cards[i].get_num_suit() == 
+                    self.all_cards[i-3].get_num_suit() and
+                    self.all_cards[i].get_num_suit() == 
+                    self.all_cards[i-4].get_num_suit()):
+                    #Sets result to 6 to represent Flush and all card ranks
+                    #inside the flush
+                    result=[6, self.all_cards[i].get_num_val(),
+                        self.all_cards[i-1].get_num_val(),                                 
+                        self.all_cards[i-2].get_num_val(),
+                        self.all_cards[i-3].get_num_val(),
+                        self.all_cards[i-4].get_num_val()]      
+                    if self.all_cards[i-4].get_num_val()==0:
                         result.pop()
                         result.insert(1,0)
                     break
 
         return result
 
-    #Evaluate if hand has Straight
-    def evaluateStraight(self, rankCounter):
+    def evaluate_straight(self, rank_counter):
+        """Evaluate if hand has Straight."""
+
         result=[]
-        if (len(rankCounter[0])>0 and len(rankCounter[12])>0 and            #Checks for straight with Ace as high
-            len(rankCounter[11])>0 and len(rankCounter[10])>0 and
-            len(rankCounter[9])>0):
-            result=[5, 0]                                                   #Sets result to 5 to represent straight and 0 to represent ace as high
+        #Checks for straight with Ace as high
+        if (len(rank_counter[0])>0 and len(rank_counter[12])>0 and            
+            len(rank_counter[11])>0 and len(rank_counter[10])>0 and
+            len(rank_counter[9])>0):
+            #Sets result to 5 to represent straight and 0 
+            #to represent ace as high
+            result=[5, 0]                                                   
             return result
-        for i in range(len(rankCounter), 4, -1):
-            if (len(rankCounter[i-1])>0 and len(rankCounter[i-2])>0 and     #Checks for straight in hand
-                len(rankCounter[i-3])>0 and len(rankCounter[i-4])>0 and
-                len(rankCounter[i-5])>0):
-                result=[5,i-1]                                              #Sets result to 5 to represent straight and highest rank in straight
+        for i in range(len(rank_counter), 4, -1):
+            #Checks for straight in hand
+            if (len(rank_counter[i-1])>0 and len(rank_counter[i-2])>0 and     
+                len(rank_counter[i-3])>0 and len(rank_counter[i-4])>0 and
+                len(rank_counter[i-5])>0):
+                #Sets result to 5 to represent straight and 
+                #highest rank in straight
+                result=[5,i-1]                                              
 
         return result
 
-    #Evaluate if hand has Three of a kind
-    def evaluateThreeOfAKind(self, rankCounter):
+    def evaluate_three_of_a_kind(self, rank_counter):
+        """Evaluate if hand has Three of a kind."""
+
         result=[]
 
-        for i in range(len(rankCounter),0,-1):
-            if len(rankCounter[i-1])>2:                     #Checks for Three of a Kind
-                result =[4, i-1]                            #Sets result to 4 to represent three of a kind
+        for i in range(len(rank_counter),0,-1):
+            #Checks for Three of a Kind
+            if len(rank_counter[i-1])>2:      
+                #Sets result to 4 to represent three of a kind               
+                result =[4, i-1]                            
                 count=0
-                if len(rankCounter[0])>0 and i!=0:
-                    result.append(0)                        #If ace is present, adds to result
+                if (len(rank_counter[0])>0 and i!=0):
+                    #If ace is present, adds to result
+                    result.append(0)                        
                     count+=1
-                for j in range(len(rankCounter),0,-1):
-                    if len(rankCounter[j-1])>0 and (j-1)!=i and count!=2:
-                        result.append(j-1)                  #Adds highest ranking cards outside of three of a kind to result
+                for j in range(len(rank_counter),0,-1):
+                    if (len(rank_counter[j-1])>0 and 
+                        (j-1)!=i and count!=2):
+                        #Adds highest ranking cards outside of three of a kind 
+                        #to result
+                        result.append(j-1)                  
                         count+=1
                 break
         return result
 
-    #Evaluate if hand has Three of a kind
-    def evaluateTwoPair(self, rankCounter):
+    def evaluate_two_pair(self, rank_counter):
+        """Evaluate if hand has Three of a kind."""
+
         result=[]
 
-        pairOne=-1
-        pairTwo=-1
+        pair_one=-1
+        pair_two=-1
 
-        for i in range(len(rankCounter),0,-1):              #Finds pairs in hand
-            if pairOne<0 or pairTwo<0:
-                if len(rankCounter[i-1])>1 and pairOne < 0:
-                    pairOne=i-1
-                elif len(rankCounter[i-1])>1:
-                    pairTwo=i-1
+        #Finds pairs in hand
+        for i in range(len(rank_counter),0,-1):              
+            if pair_one<0 or pair_two<0:
+                if len(rank_counter[i-1])>1 and pair_one < 0:
+                    pair_one=i-1
+                elif len(rank_counter[i-1])>1:
+                    pair_two=i-1
             else:
                 break
+        #Finds if two pairs exist            
+        if pair_one>=0 and pair_two >=0:                      
+            if (pair_two==0):
+                #Sets result to 3 to represent two pair
+                result=[3, pair_two, pair_one]                
+            else:                                
+                #Sets the higher pair first to result and second pair next           
+                result=[3, pair_one, pair_two]
 
-        if pairOne>=0 and pairTwo >=0:                      #Finds if two pairs exist
-            if (pairTwo==0):
-                result=[3, pairTwo, pairOne]                #Sets result to 3 to represent two pair
-            else:                                           #Sets the higher pair first to result and second pair next
-                result=[3, pairOne, pairTwo]
-
-            if (len(rankCounter[0])>0 and pairOne!=0 and pairTwo!=0):
-                    result.append(0)                        #Adds ace if not in two pair to result
+            if (len(rank_counter[0])>0 and 
+                pair_one!=0 and pair_two!=0):
+                    #Adds ace if not in two pair to result
+                    result.append(0)                        
                     return result
-            for j in range(len(rankCounter),0,-1):
-                if len(rankCounter[j-1])>0 and (j-1)!=pairOne and (j-1)!=pairTwo:
-                    result.append(j-1)                      #Adds highest ranking card outside the two pairs to result
+            for j in range(len(rank_counter),0,-1):
+                if (len(rank_counter[j-1])>0 and 
+                    (j-1)!=pair_one and (j-1)!=pair_two):
+                    #Adds highest ranking card outside the two pairs to result
+                    result.append(j-1)                      
                     break
         return result
 
-    #Evaluate if hand has One Pair
-    def evaluateOnePair(self, rankCounter):
-        result=[]
+    def evaluate_one_pair(self, rank_counter):
+        """Evaluate if hand has One Pair."""
 
-        for i in range(len(rankCounter),0,-1):              #Finds if hand has one pair
-            if len(rankCounter[i-1])>1:
-                result=[2, i-1]                             #Sets result to 2 to represent one pair and ranking of pair
+        result=[]
+        #Finds if hand has one pair
+        for i in range(len(rank_counter),0,-1):              
+            if len(rank_counter[i-1])>1:
+                #Sets result to 2 to represent one pair and ranking of pair
+                result=[2, i-1]                             
                 count=0
-                if len(rankCounter[0])>0 and i!=0:          #Adds highest ranking cards outside of pair to result
+                #Adds highest ranking cards outside of pair to result
+                if (len(rank_counter[0])>0 and i!=0):          
                     result.append(0)
                     count+=1
-                for j in range(len(rankCounter),0,-1):
-                    if len(rankCounter[j-1])>0 and (j-1)!=i and count!=3:
+                for j in range(len(rank_counter),0,-1):
+                    if (len(rank_counter[j-1])>0 and 
+                        (j-1)!=i and count!=3):
                         result.append(j-1)
                         count+=1
                 break
         return result
 
-    #Evaluate hand's high card
-    def evaluateHighCard(self, rankCounter):
-        result=[1]                                      #Sets result to 1 to represent high card
+    def evaluate_high_card(self, rank_counter):
+        """Evaluate hand's high card."""
+
+        #Sets result to 1 to represent high card
+        result=[1]                                      
         count=0
-        if len(rankCounter[0])>0:                       #Adds highest ranking four cards next
+        #Adds highest ranking four cards next
+        if len(rank_counter[0])>0:                       
             result.append(0)
             count+=1
 
-        for i in range(len(rankCounter),0,-1):          
-            if len(rankCounter[i-1])>0 and count!=5:
+        for i in range(len(rank_counter),0,-1):          
+            if len(rank_counter[i-1])>0 and count!=5:
                 result.append(i-1)
                 count+=1
 
         return result
     
-    #Finds the winner(s) of competing poker players with specific tie breaker rules.
-    def winning(self, competing, winCond):
+
+    def winning(self, competing, win_cond):
+        """Finds the winner(s) of competing poker players with specific 
+        tie breaker rules."""
         winners=[]
-        winners2=[]
-        winners3=[]
+        winners_2=[]
+        winners_3=[]
 
-        if len(competing)==1:                                           #If only one player has the highest win condition, then just return the player
+        #If only one player has the highest win condition, 
+        #then just return the player
+        if len(competing)==1:                                           
             return competing                
+        #Royal Flush
+        if win_cond==10:           
+            #Returns all competing players, as there are no tiebreakers 
+            #for Royal Flush                                      
+            return competing         
 
-        if winCond==10:                                                 #Royal Flush
-            return competing                                            #Returns all competing players, as there are no tiebreakers for Royal Flush
-
-        elif winCond==9:                                                #Straight Flush
-            maxVal = max(x._winCondition[1] for x in competing)         #Finds winner by higher card in straight flush
+        #Straight Flush
+        elif win_cond==9:                 
+            #Finds winner by higher card in straight flush                               
+            max_val = max(x.win_condition[1] for x in competing)         
             for x in competing:
-                if x._winCondition[1] == maxVal:
+                if x.win_condition[1] == max_val:
                     winners.append(x)
-
-        elif winCond==8:                                                #Four of a Kind
-            if (min(x._winCondition[1] for x in competing)==0):         
-                maxVal=0
+        #Four of a Kind
+        elif win_cond==8:                                                
+            if (min(x.win_condition[1] for x in competing)==0):         
+                max_val=0
             else:
-                maxVal = max(x._winCondition[1] for x in competing)
-            
+                max_val = max(x.win_condition[1] for x in competing)
+
+            #Finds winner by whoever has the higher four of a kind
             for x in competing:
-                if x._winCondition[1] == maxVal:                        #Finds winner by whoever has the higher four of a kind
+                if x.win_condition[1] == max_val:                        
                     winners.append(x)
-            if len(winners)>1:                                          #If there's a tie for highest four of a kind, then checks for highest card outside.
-                if (min(x._winCondition[2] for x in winners)==0):       
-                    maxVal=0
+            #If there's a tie for highest four of a kind, then checks for 
+            #highest card outside.
+            if len(winners)>1:                                          
+                if (min(x.win_condition[2] for x in winners)==0):       
+                    max_val=0
                 else:
-                    maxVal = max(x._winCondition[2] for x in winners)
+                    max_val = max(x.win_condition[2] for x in winners)
                 for x in winners:
-                    if x._winCondition[2] == maxVal:
-                        winners2.append(x)
-                return winners2
+                    if x.win_condition[2] == max_val:
+                        winners_2.append(x)
+                return winners_2
                 
-        elif winCond==7:                                                #Full House
-            if (min(x._winCondition[1] for x in competing)==0): 
-                maxVal=0
+        #Full House
+        elif win_cond==7:                                                
+            if (min(x.win_condition[1] for x in competing)==0): 
+                max_val=0
             else:
-                maxVal = max(x._winCondition[1] for x in competing)
+                max_val = max(x.win_condition[1] for x in competing)
                 
             for x in competing:
-                if x._winCondition[1] == maxVal:                        #Finds winner by whoever has the higher three of a kind
+                #Finds winner by whoever has the higher three of a kind
+                if x.win_condition[1] == max_val:                        
                     winners.append(x)
-            if len(winners)>1:                                          #If there's a tie for highest three of a kind, then checks for highest pair
-                if (min(x._winCondition[2] for x in winners)==0): 
-                    maxVal=0
+            #If there's a tie for highest three of a kind, then checks for 
+            #highest pair
+            if len(winners)>1:                                          
+                if (min(x.win_condition[2] for x in winners)==0): 
+                    max_val=0
                 else:
-                    maxVal = max(x._winCondition[2] for x in winners)
+                    max_val = max(x.win_condition[2] for x in winners)
                 for x in winners:
-                    if x._winCondition[2] == maxVal:
-                        winners2.append(x)
-                return winners2
-
-        elif winCond==6:                                                #Flush
-            if (min(x._winCondition[1] for x in competing)==0): 
-                maxVal=0
+                    if x.win_condition[2] == max_val:
+                        winners_2.append(x)
+                return winners_2
+        #Flush
+        elif win_cond==6:                                                
+            if (min(x.win_condition[1] for x in competing)==0): 
+                max_val=0
             else:
-                maxVal = max(x._winCondition[1] for x in competing)
+                max_val = max(x.win_condition[1] for x in competing)
 
+            #Finds winner by whoever has the cards in flush
             for x in competing:
-                if x._winCondition[1]==maxVal:                          #Finds winner by whoever has the cards in flush
+                if x.win_condition[1]==max_val:                          
                     winners.append(x)
-            
-            if len(winners) >1:                                         #If there's a tie for highest card, then it will check the next highest cards, continuously until the last card.
-                maxVal = max(x._winCondition[2] for x in winners)      
+            #If there's a tie for highest card, then it will check the next 
+            #highest cards, continuously until the last card.
+            if len(winners) >1:                                        
+                max_val = max(x.win_condition[2] for x in winners)      
                 for x in winners:
-                    if x._winCondition[2] == maxVal:
-                        winners2.append(x)
-                if len(winners2)==1:
-                    return winners2
+                    if x.win_condition[2] == max_val:
+                        winners_2.append(x)
+                if len(winners_2)==1:
+                    return winners_2
                 else:
-                    maxVal = max(x._winCondition[3] for x in winners2)
-                    for x in winners2:
-                        if x._winCondition[3] == maxVal:
-                            winners3.append(x)
-                    if len(winners3)==1:
-                        return winners3
+                    max_val = max(x.win_condition[3] for x in winners_2)
+                    for x in winners_2:
+                        if x.win_condition[3] == max_val:
+                            winners_3.append(x)
+                    if len(winners_3)==1:
+                        return winners_3
                     else:
                         winners.clear()
-                        maxVal = max(x._winCondition[4] for x in winners3)
-                        for x in winners3:
-                            if x._winCondition[4] == maxVal:
+                        max_val = max(x.win_condition[4] for x in winners_3)
+                        for x in winners_3:
+                            if x.win_condition[4] == max_val:
                                 winners.append(x)
                         if len(winners)==1:
                             return winners
                         else:     
-                            winners2.clear()
-                            maxVal = max(x._winCondition[5] for x in winners)
+                            winners_2.clear()
+                            max_val = max(x.win_condition[5] for x in winners)
                             for x in winners:
-                                if x._winCondition[5] == maxVal:
-                                    winners2.append(x)
-                            return winners2        
-
-        elif winCond==5:                                                #Straight
-            if (min(x._winCondition[1] for x in competing)==0): 
-                maxVal=0
+                                if x.win_condition[5] == max_val:
+                                    winners_2.append(x)
+                            return winners_2        
+        #Straight
+        elif win_cond==5:                                                
+            if (min(x.win_condition[1] for x in competing)==0): 
+                max_val=0
             else:
-                maxVal = max(x._winCondition[1] for x in competing)            
+                max_val = max(x.win_condition[1] for x in competing)            
 
+            #Finds winner by whoever has the higher straight
             for x in competing:
-                if x._winCondition[1]==maxVal:                          #Finds winner by whoever has the higher straight
+                if x.win_condition[1]==max_val:                          
                     winners.append(x)
-        
-        elif winCond==4:                                                #Three of a Kind
-            if (min(x._winCondition[1] for x in competing)==0): 
-                maxVal=0
+
+        #Three of a Kind
+        elif win_cond==4:                                               
+            if (min(x.win_condition[1] for x in competing)==0): 
+                max_val=0
             else:
-                maxVal = max(x._winCondition[1] for x in competing)
+                max_val = max(x.win_condition[1] for x in competing)
 
+            #Finds winner by whoever has the higher three of a kind
             for x in competing:
-                if x._winCondition[1]==maxVal:                          #Finds winner by whoever has the higher three of a kind
+                if x.win_condition[1]==max_val:                          
                     winners.append(x)
-            
-            if len(winners) >1:                                         #If there's a tie for highest three of a kind, checks remaining cards for higher ranks
-                if (min(x._winCondition[2] for x in winners)==0): 
-                    maxVal=0
+            #If there's a tie for highest three of a kind, checks remaining 
+            #cards for higher ranks
+            if len(winners) >1:                                         
+                if (min(x.win_condition[2] for x in winners)==0): 
+                    max_val=0
                 else:
-                    maxVal = max(x._winCondition[2] for x in winners)
+                    max_val = max(x.win_condition[2] for x in winners)
                 for x in winners:
-                    if x._winCondition[2] == maxVal:
-                        winners2.append(x)
-                if len(winners2)==1:
-                    return winners2
+                    if x.win_condition[2] == max_val:
+                        winners_2.append(x)
+                if len(winners_2)==1:
+                    return winners_2
                 else:
-                    maxVal = max(x._winCondition[3] for x in winners2)
-                    for x in winners2:
-                        if x._winCondition[3] == maxVal:
-                            winners3.append(x)
-                    return winners3
-
-        elif winCond==3:                                                #Two Pair
+                    max_val = max(x.win_condition[3] for x in winners_2)
+                    for x in winners_2:
+                        if x.win_condition[3] == max_val:
+                            winners_3.append(x)
+                    return winners_3
+        #Two Pair
+        elif win_cond==3:                                                
             
-            if (min(x._winCondition[1] for x in competing)==0): 
-                maxVal=0
+            if (min(x.win_condition[1] for x in competing)==0): 
+                max_val=0
             else:
-                maxVal = max(x._winCondition[1] for x in competing)
+                max_val = max(x.win_condition[1] for x in competing)
 
+            #Finds winner by whoever has the higher first pair
             for x in competing:
-                if x._winCondition[1]==maxVal:                          #Finds winner by whoever has the higher first pair
+                if x.win_condition[1]==max_val:                          
                     winners.append(x)
-            
+            #If tied, finds winner by whoever has the higher second pair
             if len(winners) >1:
-                maxVal = max(x._winCondition[2] for x in winners)       #If tied, finds winner by whoever has the higher second pair
+                max_val = max(x.win_condition[2] for x in winners)       
                 for x in winners:
-                    if x._winCondition[2] == maxVal:
-                        winners2.append(x)
-                if len(winners2)==1:                                    #If tied again, finds winner by whoever has the highest remaining card
-                    return winners2
+                    if x.win_condition[2] == max_val:
+                        winners_2.append(x)
+                #If tied again, finds winner by whoever has the highest 
+                # remaining card
+                if len(winners_2)==1:                                    
+                    return winners_2
                 else:
-                    if (min(x._winCondition[3] for x in winners2)==0): 
-                        maxVal=0
+                    if (min(x.win_condition[3] for x in winners_2)==0): 
+                        max_val=0
                     else:
-                        maxVal = max(x._winCondition[3] for x in winners2)
-                    for x in winners2:
-                        if x._winCondition[3] == maxVal:
-                            winners3.append(x)
-                    return winners3
-
-        elif winCond==2:                                                #One Pair
-            if (min(x._winCondition[1] for x in competing)==0): 
-                maxVal=0
+                        max_val = max(x.win_condition[3] for x in winners_2)
+                    for x in winners_2:
+                        if x.win_condition[3] == max_val:
+                            winners_3.append(x)
+                    return winners_3
+        #One Pair
+        elif win_cond==2:                                                
+            if (min(x.win_condition[1] for x in competing)==0): 
+                max_val=0
             else:
-                maxVal = max(x._winCondition[1] for x in competing)
+                max_val = max(x.win_condition[1] for x in competing)
 
+            #Finds winner by whoever has the higher pair
             for x in competing:
-                if x._winCondition[1]==maxVal:                          #Finds winner by whoever has the higher pair
+                if x.win_condition[1]==max_val:                          
                     winners.append(x)
-            
-            if len(winners) >1:                                         #If there's a tie for highest pair, then it will check the next highest cards, continuously until the last card.
-                if (min(x._winCondition[2] for x in winners)==0): 
-                    maxVal=0
+            #If there's a tie for highest pair, then it will check the next 
+            # highest cards, continuously until the last card.
+            if len(winners) >1:                                         
+                if (min(x.win_condition[2] for x in winners)==0): 
+                    max_val=0
                 else:
-                    maxVal = max(x._winCondition[2] for x in winners)
+                    max_val = max(x.win_condition[2] for x in winners)
                 for x in winners:
-                    if x._winCondition[2] == maxVal:
-                        winners2.append(x)
-                if len(winners2)==1:
-                    return winners2
+                    if x.win_condition[2] == max_val:
+                        winners_2.append(x)
+                if len(winners_2)==1:
+                    return winners_2
                 else:
-                    maxVal = max(x._winCondition[3] for x in winners2)
-                    for x in winners2:
-                        if x._winCondition[3] == maxVal:
-                            winners3.append(x)
-                    if len(winners3)==1:
-                        return winners3
+                    max_val = max(x.win_condition[3] for x in winners_2)
+                    for x in winners_2:
+                        if x.win_condition[3] == max_val:
+                            winners_3.append(x)
+                    if len(winners_3)==1:
+                        return winners_3
                     else:
                         winners.clear()
-                        maxVal = max(x._winCondition[4] for x in winners3)
-                        for x in winners3:
-                            if x._winCondition[4] == maxVal:
+                        max_val = max(x.win_condition[4] for x in winners_3)
+                        for x in winners_3:
+                            if x.win_condition[4] == max_val:
                                 winners.append(x)    
-
-        elif winCond==1:                                            #High Card
-            if (min(x._winCondition[1] for x in competing)==0): 
-                maxVal=0
+        #High Card
+        elif win_cond==1:                                            
+            if (min(x.win_condition[1] for x in competing)==0): 
+                max_val=0
             else:
-                maxVal = max(x._winCondition[1] for x in competing)
+                max_val = max(x.win_condition[1] for x in competing)
 
+            #Finds winner by whoever has the highest card, if tied continuously 
+            # check the next highest card
             for x in competing:
-                if x._winCondition[1]==maxVal:                      #Finds winner by whoever has the highest card, if tied continuously check the next highest card
+                if x.win_condition[1]==max_val:                      
                     winners.append(x)               
             
             if len(winners) >1:
-                maxVal = max(x._winCondition[2] for x in winners)
+                max_val = max(x.win_condition[2] for x in winners)
                 for x in winners:
-                    if x._winCondition[2] == maxVal:
-                        winners2.append(x)
-                if len(winners2)==1:
-                    return winners2
+                    if x.win_condition[2] == max_val:
+                        winners_2.append(x)
+                if len(winners_2)==1:
+                    return winners_2
                 else:
-                    maxVal = max(x._winCondition[3] for x in winners2)
-                    for x in winners2:
-                        if x._winCondition[3] == maxVal:
-                            winners3.append(x)
-                    if len(winners3)==1:
-                        return winners3
+                    max_val = max(x.win_condition[3] for x in winners_2)
+                    for x in winners_2:
+                        if x.win_condition[3] == max_val:
+                            winners_3.append(x)
+                    if len(winners_3)==1:
+                        return winners_3
                     else:
                         winners.clear()
-                        maxVal = max(x._winCondition[4] for x in winners3)
-                        for x in winners3:
-                            if x._winCondition[4] == maxVal:
+                        max_val = max(x.win_condition[4] for x in winners_3)
+                        for x in winners_3:
+                            if x.win_condition[4] == max_val:
                                 winners.append(x)
                         if len(winners)==1:
                             return winners
                         else:     
-                            winners2.clear()
-                            maxVal = max(x._winCondition[5] for x in winners)
+                            winners_2.clear()
+                            max_val = max(x.win_condition[5] for x in winners)
                             for x in winners:
-                                if x._winCondition[5] == maxVal:
-                                    winners2.append(x)
-                            return winners2                      
+                                if x.win_condition[5] == max_val:
+                                    winners_2.append(x)
+                            return winners_2                      
         return winners
