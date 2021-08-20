@@ -14,8 +14,8 @@ class Deck:
 		This is the constructor for the deck class.
 		It initializes the list of cards by calling the build method.
 		"""
-		self.cards = [] # Stores the cards present in the deck
-		self.build() # Creates the deck of cards
+		self.cards = []  # Stores the cards present in the deck
+		self.build()  # Creates the deck of cards
 	
 
 	def build(self):
@@ -81,24 +81,18 @@ class Deck:
 				
 	
 	def show(self):
-		"""
-		This method shows the cards present in the deck.
-		"""
+		"""This method shows the cards present in the deck."""
 		for c in self.cards:
 			c.show()
 	
 
 	def shuffle(self):
-		"""
-		This method shuffles the deck of cards in a random order.
-		"""
+		"""This method shuffles the deck of cards in a random order."""
 		for i in range(len(self.cards) -1, 0, -1):
 			r = random.randint(0, i)
 			self.cards[i], self.cards[r], = self.cards[r], self.cards[i]
 	
 
 	def draw_card(self):
-		"""
-		This method returns a single card from the deck of cards.
-		"""
+		"""This method returns a single card from the deck of cards."""
 		return self.cards.pop()
