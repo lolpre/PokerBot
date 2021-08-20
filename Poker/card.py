@@ -1,12 +1,12 @@
-##############################
-# CARD                       #
-# The Card class stores all  #
-# the information regarding  #
-# the poker card, including  #
-# the suit and number of the #
-# card.                      #
-##############################
 class Card:
+"""
+ CARD                       
+ The Card class stores all  
+ the information regarding  
+ the poker card, including  
+ the suit and number of the 
+ card.                      
+"""
 	
 	def __init__(self, suit, val, emote):
 	"""
