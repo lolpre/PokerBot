@@ -1,12 +1,13 @@
 import random
 from Poker.card import Card
 
+
+class Deck:
 '''
 This deck class represents the main deck used in the poker game.
 It builds a deck, shuffles it and returns one card at a time
 when drawCard() is called.
 '''
-class Deck:
 	
 	# This is the constructor for the deck class
 	# It initializes the list of cards by calling the build method
