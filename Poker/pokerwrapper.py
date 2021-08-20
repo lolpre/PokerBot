@@ -44,8 +44,7 @@ class PokerWrapper:
         """Starts the game and sets player with the embed as the message being sent."""
 
         embed = discord.Embed(title="Poker: Texas hold 'em",
-                              description="Starting Balance: "+str(self.starting_balance) + """
-                              <:chips:865450470671646760>
+                              description="Starting Balance: "+str(self.starting_balance) + """<:chips:865450470671646760>
         Min Bet: """ + str(self.hard_blind) + """ <:chips:865450470671646760>
         \nReact to Join!""",
             color=discord.Color.green())
