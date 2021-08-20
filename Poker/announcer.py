@@ -13,7 +13,7 @@ import asyncio
 class Announcer:
     
     """
-    outputs the announcing message that begins the Poker Game
+    initiate_bet outputs the announcing message that begins the Poker Game.
     input: ctx (part of Discord API, the context of the message)
     output: none
     """
@@ -24,7 +24,7 @@ class Announcer:
         " and betting system.")
     
     """
-    outputs the announcing message that asks users for Bets 
+    ask_bet outputs the announcing message that asks users for Bets 
     in the beginning of the game. 
     input: ctx -> part of Discord API, the context of the message
     """
@@ -32,7 +32,7 @@ class Announcer:
         await ctx.send("What is the big blind (minimum bet) amount?")
     
     """
-    outputs the announcing message that reveals the winner of the game
+    announce_winner outputs the announcing message that reveals the winner of the game.
     input: ctx -> part of Discord API, the context of the message
            sorted_players -> a sorted list of players, the winner 
                               at the beginning of list
@@ -45,7 +45,7 @@ class Announcer:
         await ctx.send(winner + " has won, receiving " + str(currentPot))
     
     """
-     outputs the announcing message that asks participants for their next move 
+     ask_move outputs the announcing message that asks participants for their next move. 
      input: ctx -> a class object. part of Discord API, the context of the message
             member -> a class object. part of Discord API, the information about the Discord User
             hasRaised -> a boolean that checks if the previous user has increased bet
@@ -59,16 +59,16 @@ class Announcer:
             await ctx.send("{}, Would you like to check, raise, or fold?".format(member))
     
     """
-     outputs the announcing message that asks participant for the starting balance 
-     for the game
+     ask_balance outputs the announcing message that asks participant for the starting balance 
+     for the game.
     input: ctx -> part of Discord API, the context of the message
     """
     async def ask_balance(self, ctx):
         await ctx.send("What should be the starting game balance of all players?")
     
     """
-     limits the time given for someone to join the game. the timer is 
-     30 seconds long
+     join_timer limits the time given for someone to join the game. the timer is 
+     30 seconds long.
     input: ctx -> part of Discord API, the context of the message
     """
     async def join_timer(self, ctx):
@@ -80,7 +80,7 @@ class Announcer:
             await asyncio.sleep(1)
     
     """
-    outputs the announcing message that opens the game for people to join 
+    join_queue outputs the announcing message that opens the game for people to join. 
     input: ctx -> a class object. part of Discord API, the context of the message
     """
     async def join_queue(self, ctx):
@@ -90,7 +90,7 @@ class Announcer:
         await ctx.send("Time is up. The game will be starting shortly...")
     
     """
-    reveals all the cards in a hand. outputs the message into the game channel.
+    show_cards reveals all the cards in a hand. outputs the message into the game channel.
     input: ctx -> a class object. part of Discord API, the context of the message
             hand -> an array of the Card object 
     """
@@ -101,7 +101,7 @@ class Announcer:
         await ctx.send(cards)
 
     """
-    reveals the community deck. outputs the mesasge into the game channel
+    show_comm_cards reveals the community deck. outputs the mesasge into the game channel.
     input: ctx -> a class object. part of Discord API, the context of the message
             comm_deck -> an array of the Card object, ideally where the community deck is stored
     """
@@ -117,7 +117,7 @@ class Announcer:
         await ctx.send(commCards)
         
     """
-     outputs the announcing message that someone has raised the bet amount 
+     report_raise outputs the announcing message that someone has raised the bet amount. 
      input: ctx -> a class object. part of Discord API, the context of the message
             name -> the string of the player's name
             amount -> the string of the raise amount 
@@ -126,7 +126,7 @@ class Announcer:
         await ctx.send(name + " has raised to " + amount + " <:chips:865450470671646760>!")
 
     """
-     outputs the announcing message that someone has called
+     report_call outputs the announcing message that someone has called.
      input: ctx -> a class object. part of Discord API, the context of the message
             name -> the string of the player name 
     """
@@ -134,7 +134,7 @@ class Announcer:
         await ctx.send(name + " has called!")
     
     """
-     outputs the announcing message that someone has folded 
+     report_fold outputs the announcing message that someone has folded. 
      input: ctx -> a class object. part of Discord API, the context of the message
             name -> the string of the player name
     """
@@ -142,7 +142,7 @@ class Announcer:
         await ctx.send(name + " has folded!")
     
     """
-     outputs the announcing message that someone has checked 
+     report_checkoutputs the announcing message that someone has checked. 
      input: ctx -> a class object. part of Discord API, the context of the message
             name -> the string of the player name 
     """
@@ -150,7 +150,7 @@ class Announcer:
         await ctx.send(name + " has checked!")
 
     """
-     outputs the balances of all the participating poker players 
+     show_balances outputs the balances of all the participating poker players. 
      input: ctx -> a class object. part of Discord API, the context of the message
             pkr_players -> a list of Poker Player objects. a list of all the particpants
     """
@@ -160,7 +160,7 @@ class Announcer:
             await ctx.send(player.username() + ": " + str(player.getGameBalance())+ " <:chips:865450470671646760>")
     
     """
-     outputs the formatted player profile 
+     show_player outputs the formatted player profile. 
      input: ctx -> a class object. part of Discord API, the context of the message
             game -> a PokerWrapper object. the current game information 
     """
@@ -175,28 +175,28 @@ class Announcer:
         await ctx.send(embed=embed)
 
     """
-     outputs the announcing message that requests if anyone would like to leave the poker game
+     ask_leave outputs the announcing message that requests if anyone would like to leave the poker game.
      input: ctx -> a class object. part of Discord API, the context of the message
     """
     async def ask_leave(self, ctx):
         await ctx.send("If you would like to leave the game, type the command .leave")
     
     """
-     outputs the announcing message that a game has restarted 
+     reset_game outputs the announcing message that a game has restarted. 
      input: ctx -> a class object. part of Discord API, the context of the message
     """
     async def reset_game(self, ctx):
         await ctx.send("\n\n**A NEW GAME HAS STARTED**")
     
     """
-     outputs the error message that a game is already ongoing in the current channel 
+     game_already_in_progress outputs the error message that a game is already ongoing in the current channel. 
      input: ctx -> a class object. part of Discord API, the context of the message
     """
     async def game_already_in_progress(self, ctx):
         await ctx.send("Cannot create game: Game is already in progress in this channel!")
     
     """
-     outputs the error message that the player does not have a profile created 
+     no_account outputs the error message that the player does not have a profile created. 
      input: ctx -> a class object. part of Discord API, the context of the message
             user -> a class object. part of the Discord API, the user information 
     """
@@ -204,7 +204,7 @@ class Announcer:
         await ctx.send(f"{user.mention} You do not have an account! Use the command .create to create an account!")
     
     """
-     outputs the error message that a player tried to join a game that they are already in 
+     player_already_in_game outputs the error message that a player tried to join a game that they are already in. 
      input: ctx -> a class object. part of Discord API, the context of the message
             user -> a class object. part of the Discord API, the user information 
     """
@@ -212,14 +212,14 @@ class Announcer:
         await ctx.send(f"{user.mention} You are already in game! Use the .leave command to exit your current game to join a new one!")
     
     """
-     outputs the error message that there is no ongoing game
+     no_game outputs the error message that there is no ongoing game.
      input: ctx -> a class object. part of Discord API, the context of the message
     """
     async def no_game(self, ctx):
         await ctx.send(f"There is no game currently running in this channel")
     
     """
-     outputs the announcing message that a player will join the game the next round 
+     added_to_join_queue outputs the announcing message that a player will join the game the next round. 
      input: ctx -> a class object. part of Discord API, the context of the message
             user -> a class object. part of the Discord API, the user information 
     """
@@ -227,7 +227,7 @@ class Announcer:
         await ctx.send(f"{user.mention} You have been added to the join queue! You will be in the next game once the round is over.")
     
     """
-     outputs the announcing message that a player will leave the game the next round 
+     added_to_leave_queue outputs the announcing message that a player will leave the game the next round. 
      input: ctx -> a class object. part of Discord API, the context of the message
             user -> a class object. part of the Discord API, the user information 
     """
@@ -235,7 +235,7 @@ class Announcer:
         await ctx.send(f"{user.mention} You have been added to the leave queue! You will exit the game once the round is over.")
     
     """
-     outputs the announcing message that the player has joined the game for the new round 
+     player_has_joined outputs the announcing message that the player has joined the game for the new round. 
      input: ctx -> a class object. part of Discord API, the context of the message
             user -> a class object. part of the Discord API, the user information 
     """
@@ -243,7 +243,7 @@ class Announcer:
         await ctx.send(f"{user.mention} has joined the game!")
     
     """
-     outputs the announcing message that the player has left for the new round 
+     player_has_left outputs the announcing message that the player has left for the new round. 
      input: ctx -> a class object. part of Discord API, the context of the message
             user -> a class object. part of the Discord API, the user information 
     """
@@ -251,8 +251,8 @@ class Announcer:
         await ctx.send(f"{user.mention} has left the game!")
 
     """
-     outputs the announcing message that the player has been kicked when there are not enough 
-     participants 
+     player_kicked outputs the announcing message that the player has been kicked when there are not enough 
+     participants. 
      input: ctx -> a class object. part of Discord API, the context of the message
             user -> a class object. part of the Discord API the user information 
     """
@@ -260,8 +260,8 @@ class Announcer:
         await ctx.send(f"{user.mention} You have been removed from the game as there are not enough players")
     
     """
-     outputs the error message that a user in the current channel are typing in commands in a game 
-     they are not participating in 
+     not_in_game outputs the error message that a user in the current channel are typing in commands in a game 
+     they are not participating in. 
      input: ctx -> a class object. part of Discord API, the context of the message
             user -> a class object. part of the Discord API, the user information 
     """
@@ -269,7 +269,7 @@ class Announcer:
         await ctx.send(f"{user.mention} You are not in this game! Use the .join command to join the game")
 
     """
-     outputs the error message that a participant has already requested to leave the game 
+     already_in_leave_queue outputs the error message that a participant has already requested to leave the game. 
      input: ctx -> a class object. part of Discord API, the context of the message
             user -> a class object. part of the Discord API, the user information
     """
@@ -277,7 +277,7 @@ class Announcer:
         await ctx.send(f"{user.mention} You are already in the leave queue! You will be removed from the game after this round")
     
     """
-     outputs the error message that a participant has already requested to join the game 
+     already_in_join_queue outputs the error message that a participant has already requested to join the game.
      input: ctx -> a class object. part of Discord API, the context of the message
             user -> a class object. part of the Discord API, the user information 
     """
@@ -285,7 +285,7 @@ class Announcer:
         await ctx.send(f"{user.mention} You are already in the join queue! You will be added to the game after this round")
     
     """
-     outputs the error message that the game is currently full and that the user will be added to the join queue.
+     game_is_full outputs the error message that the game is currently full and that the user will be added to the join queue.
      input: ctx -> a class object. part of Discord API, the context of the message
             user -> a class object. part of the Discord API, the user information 
     """
@@ -293,7 +293,7 @@ class Announcer:
         await ctx.send(f"{user.mention} Game is currently full. You will be added to the join queue.")
     
     """
-    outputs the error message that a particpant has wagered an amount higher than their game balance 
+    above_balance outputs the error message that a particpant has wagered an amount higher than their game balance. 
      input: ctx -> a class object. part of Discord API, the context of the message
             user -> a class object. part of the Discord API, the user information 
     """
@@ -301,7 +301,7 @@ class Announcer:
         await ctx.send(f"{user.mention} You exceeded your game balance. Please wager a new amount.")
 
     """
-    outputs the error message that a particpant has wagered an amount that is not numerical
+    value_not_digit outputs the error message that a particpant has wagered an amount that is not a number.
      input: ctx -> a class object. part of Discord API, the context of the message
             user -> a class object. part of the Discord API, the user information 
     """
